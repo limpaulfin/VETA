@@ -1,0 +1,374 @@
+---
+alwaysApply: true
+---
+
+# Rule: Pool Memory Management System
+
+*Mod by Fong on 2025-07-27--19-43-PM*
+
+## Mục đích
+
+Quy tắc này định nghĩa cách tạo, lưu trữ và tìm kiếm thông tin trong thư mục pool-memory (`/home/fong/Dropbox/pool-memory/`) - một kho lưu trữ tập trung cho các file JSON có cấu trúc chuẩn và machine-readable.
+
+## Nguyên tắc cốt lõi
+
+- **Single Source of Truth (SSoT)**: Mỗi thông tin chỉ lưu một lần trong pool-memory, đảm bảo tính nhất quán
+- **Don't Repeat Yourself (DRY)**: Không lặp lại thông tin, tìm kiếm trước khi tạo mới
+- **Machine Readable**: Tất cả file JSON phải có cấu trúc chuẩn, không pretty-print
+- **UUID Identification**: Mỗi file phải có UUID định danh duy nhất
+- **Structured Metadata**: Metadata đầy đủ với tags, timestamps, và descriptions
+- **Searchable Content**: Nội dung phải dễ tìm kiếm bằng grep/find
+- **MCP Priority**: Ưu tiên sử dụng MCP tools khi có sẵn
+- **Token Limit**: Mỗi file JSON giới hạn <8000 tokens (~30,000 characters)
+- **Precise English Terminology**: Sử dụng thuật ngữ tiếng Anh chính xác cho tất cả nội dung
+- **Memory Alignment**: Memory phải phản ánh thực tế, luôn align và củng cố
+
+## Cấu trúc thư mục
+
+```
+/home/fong/Dropbox/pool-memory/
+├── system-analysis-*.json
+├── process-logs-*.json
+├── configuration-*.json
+├── discovery-reports-*.json
+└── technical-notes-*.json
+```
+
+## Quy trình tạo file JSON trong pool-memory
+
+### Bước 0: Tìm kiếm trước khi tạo (DRY Principle)
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Tìm kiếm với nhiều từ khóa tiếng Anh
+grep -r -i -E "keyword1|keyword2|keyword3" /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm kiếm theo task name
+grep -r -i "task_name.*similar_task" /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm kiếm theo tags
+grep -r -i '"tags".*"relevant_tag"' /home/fong/Dropbox/pool-memory/ --include="*.json"
+```
+
+**Lưu ý**: Nếu tìm thấy thông tin tương tự, cập nhật file hiện có thay vì tạo mới (SSoT principle)
+
+### Bước 1: Tạo UUID định danh
+```bash
+# Sử dụng MCP fong-linux-command-executor
+uuidgen
+```
+
+### Bước 2: Lấy timestamp
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Unix timestamp
+date +%s
+
+# Human readable timestamp
+date '+%Y-%m-%d--%H-%M-%p'
+```
+
+### Bước 3: Tạo file JSON với cấu trúc chuẩn
+```json
+{
+  "metadata": {
+    "file_uuid": "UUID_GENERATED",
+    "task_name": "descriptive_task_name",
+    "machine_hostname": "hostname",
+    "os_platform": "OS_platform",
+    "created_at": {
+      "unix_timestamp": TIMESTAMP,
+      "human_readable": "YYYY-MM-DD--HH-MM-PM"
+    },
+    "last_updated": {
+      "unix_timestamp": TIMESTAMP,
+      "human_readable": "YYYY-MM-DD--HH-MM-PM"
+    },
+    "process_status": "completed|in_progress|failed",
+    "tags": [
+      "tag1", "tag2", "tag3"
+    ]
+  },
+  "content": {
+    // Nội dung chính của file
+  }
+}
+```
+
+### Bước 4: Đặt tên file theo quy ước
+```
+[task-type]-[description]-[uuid].json
+```
+
+Ví dụ:
+- `chrome-profile-discovery-process-97f8b293-3982-4490-83b1-433ea1934c62.json`
+- `system-inventory-analysis-8f4a2b1c-3d5e-4f6g-7h8i-9j0k1l2m3n4o.json`
+
+### Bước 5: Move file vào pool-memory
+```bash
+# Sử dụng MCP fong-linux-command-executor
+mv /path/to/source/file.json /home/fong/Dropbox/pool-memory/
+```
+
+**Lưu ý MCP Priority:**
+- **Đọc file JSON**: Ưu tiên sử dụng `fong-long-file-reader` cho file lớn
+- **Thực thi lệnh**: Ưu tiên sử dụng `fong-linux-command-executor` cho command line
+- **Tạo/ghi file**: Nếu không dùng edit_file được, sử dụng command line với MCP
+
+**Lưu ý Precise English:**
+- **Tất cả nội dung**: Sử dụng thuật ngữ tiếng Anh chính xác
+- **Task names**: Dùng precise terminology (ví dụ: "system_analysis" thay vì "phân tích hệ thống")
+- **Tags**: Ưu tiên tags tiếng Anh, có thể kết hợp với tags tiếng Việt
+- **Descriptions**: Mô tả ngắn gọn bằng tiếng Anh chính xác
+
+**Lưu ý Token Limit:**
+- **Giới hạn**: Mỗi file JSON <8000 tokens (~30,000 characters)
+- **Kiểm tra token**: Sử dụng Linux commands để đếm
+- **Chia nhỏ**: Nếu vượt quá giới hạn, chia thành nhiều file nhỏ hơn
+
+## Quy trình tìm kiếm thông tin trong pool-memory
+
+**MCP Priority cho tìm kiếm:**
+- **Command line search**: Sử dụng `fong-linux-command-executor`
+- **Đọc file kết quả**: Sử dụng `fong-long-file-reader` cho file JSON lớn
+- **File operations**: Sử dụng `fong-linux-command-executor` cho ls, find, mv
+
+**Tìm kiếm với nhiều từ khóa (Multi-keyword Search):**
+- **Ưu tiên từ khóa tiếng Anh**: Sử dụng thuật ngữ kỹ thuật tiếng Anh chính xác
+- **Kết hợp nhiều từ khóa**: Dùng regex với `|` để tìm kiếm rộng
+- **Từ khóa liên quan**: Brainstorm các từ đồng nghĩa và liên quan
+- **Context search**: Tìm với context trước và sau kết quả
+
+### 1. Tìm kiếm theo UUID
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Tìm file theo UUID cụ thể
+find /home/fong/Dropbox/pool-memory/ -name "*UUID_HERE*" -type f
+
+# Tìm trong nội dung file có UUID
+grep -r "UUID_HERE" /home/fong/Dropbox/pool-memory/ --include="*.json"
+```
+
+### 2. Tìm kiếm theo task name
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Tìm file theo task name với nhiều từ khóa tiếng Anh
+grep -r -i -E "task_name.*(chrome_profile|browser_profile|user_profile)" /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm file có chứa từ khóa task với precise terminology
+grep -r -i -E "(chrome.*profile|browser.*profile|user.*profile)" /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm kiếm mở rộng với từ khóa liên quan
+grep -r -i -E "(profile.*discovery|profile.*analysis|profile.*inventory)" /home/fong/Dropbox/pool-memory/ --include="*.json"
+```
+
+### 3. Tìm kiếm theo tags
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Tìm file có tag cụ thể với precise English terminology
+grep -r -i -E '"tags".*"(system_analysis|system_inventory|configuration_audit)"' /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm file có nhiều tags kết hợp
+grep -r -i -E '"tags".*"(chrome_profiles|browser_profiles)".*"(discovery|analysis|inventory)"' /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm kiếm với tags tiếng Anh chính xác
+grep -r -i -E '"tags".*"(profile_mapping|user_accounts|browser_configuration)"' /home/fong/Dropbox/pool-memory/ --include="*.json"
+```
+
+### 4. Tìm kiếm theo timestamp
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Tìm file tạo trong khoảng thời gian
+grep -r "2025-07-27" /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm file theo unix timestamp
+grep -r "1753619500" /home/fong/Dropbox/pool-memory/ --include="*.json"
+```
+
+### 5. Tìm kiếm theo machine hostname
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Tìm file liên quan đến máy cụ thể
+grep -r "ubuntu-lenovo-t14" /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm file theo OS platform
+grep -r "Ubuntu Linux" /home/fong/Dropbox/pool-memory/ --include="*.json"
+```
+
+### 6. Tìm kiếm theo process status
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Tìm file đã hoàn thành
+grep -r '"process_status".*"completed"' /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm file đang thực hiện
+grep -r '"process_status".*"in_progress"' /home/fong/Dropbox/pool-memory/ --include="*.json"
+```
+
+### 7. Tìm kiếm nâng cao với context
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Tìm với context 3 dòng trước và sau với precise terminology
+grep -r -A 3 -B 3 -E "(system_analysis|profile_discovery|configuration_audit)" /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm file có nhiều từ khóa tiếng Anh chính xác
+grep -r -l -E "(chrome.*profile|browser.*profile)" /home/fong/Dropbox/pool-memory/ --include="*.json" | xargs grep -l -E "(discovery|analysis|inventory)"
+
+# Tìm kiếm với từ khóa liên quan và context
+grep -r -A 5 -B 5 -E "(user_accounts|profile_mapping|browser_configuration)" /home/fong/Dropbox/pool-memory/ --include="*.json"
+```
+
+### 8. Tìm kiếm theo file type
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Liệt kê tất cả file JSON
+find /home/fong/Dropbox/pool-memory/ -name "*.json" -type f
+
+# Đếm số file
+find /home/fong/Dropbox/pool-memory/ -name "*.json" -type f | wc -l
+
+# Tìm file theo pattern tên
+find /home/fong/Dropbox/pool-memory/ -name "*chrome*" -type f
+```
+
+## Best Practices
+
+### 1. Tạo file JSON
+- **Luôn có metadata đầy đủ**: UUID, timestamps, tags, task_name
+- **Sử dụng tags mô tả**: Ít nhất 10 tags, ưu tiên tags tiếng Anh chính xác
+- **Cấu trúc chuẩn**: Tuân thủ format JSON machine-readable
+- **Tên file mô tả**: Bao gồm task type, description, và UUID
+- **Precise English**: Tất cả nội dung sử dụng thuật ngữ tiếng Anh chính xác
+
+### 2. Tìm kiếm thông tin
+- **Bắt đầu với grep rộng**: Tìm từ khóa chính trước
+- **Thu hẹp dần**: Sử dụng context và multiple keywords
+- **Kết hợp find và grep**: Find để lọc file, grep để tìm nội dung
+- **Sử dụng regex**: Cho tìm kiếm phức tạp
+- **Ưu tiên từ khóa tiếng Anh**: Sử dụng precise terminology
+- **Multi-keyword search**: Kết hợp nhiều từ khóa liên quan
+
+### 3. Quản lý pool-memory
+- **Không duplicate**: Kiểm tra trước khi tạo file mới (DRY principle)
+- **Cập nhật metadata**: Khi file thay đổi
+- **Backup định kỳ**: Sao lưu thư mục pool-memory
+- **Dọn dẹp**: Xóa file cũ không còn cần thiết
+- **Memory Alignment**: Luôn align memory với thực tế, củng cố thông tin
+- **SSoT maintenance**: Duy trì single source of truth cho mỗi thông tin
+- **Token management**: Kiểm tra và duy trì giới hạn <8000 tokens/file
+
+## Ví dụ thực tế
+
+### Tạo file process log
+```bash
+# Sử dụng MCP fong-linux-command-executor cho tất cả commands
+# 1. Tạo UUID
+UUID=$(uuidgen)
+
+# 2. Lấy timestamp
+TIMESTAMP=$(date +%s)
+HUMAN_TIME=$(date '+%Y-%m-%d--%H-%M-%p')
+
+# 3. Tạo file JSON
+cat > /tmp/process-log.json << EOF
+{
+  "metadata": {
+    "file_uuid": "$UUID",
+    "task_name": "system_analysis_task",
+    "created_at": {
+      "unix_timestamp": $TIMESTAMP,
+      "human_readable": "$HUMAN_TIME"
+    },
+    "tags": ["system_analysis", "process_log", "automation"]
+  },
+  "content": {
+    "task_description": "System analysis completed"
+  }
+}
+EOF
+
+# 4. Move vào pool-memory
+mv /tmp/process-log.json /home/fong/Dropbox/pool-memory/system-analysis-$UUID.json
+```
+
+### Tìm kiếm thông tin
+```bash
+# Sử dụng MCP fong-linux-command-executor cho tất cả commands
+# Tìm tất cả file liên quan đến Chrome với precise terminology
+grep -r -i -E "(chrome|browser|profile)" /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm file tạo hôm nay
+grep -r "$(date '+%Y-%m-%d')" /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm file có tag system_analysis với precise English
+grep -r -E '"tags".*"(system_analysis|system_inventory|configuration_audit)"' /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm kiếm với nhiều từ khóa liên quan
+grep -r -i -E "(profile_discovery|browser_configuration|user_accounts)" /home/fong/Dropbox/pool-memory/ --include="*.json"
+```
+
+## Troubleshooting
+
+### File không tìm thấy
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Kiểm tra thư mục tồn tại
+ls -la /home/fong/Dropbox/pool-memory/
+
+# Kiểm tra quyền truy cập
+ls -la /home/fong/Dropbox/pool-memory/*.json
+```
+
+### JSON không hợp lệ
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Validate JSON
+cat /home/fong/Dropbox/pool-memory/file.json | jq '.'
+
+# Kiểm tra syntax
+python3 -m json.tool /home/fong/Dropbox/pool-memory/file.json
+```
+
+### Kiểm tra Token Count
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Đếm characters (rough estimate: ~4 chars per token)
+wc -c /home/fong/Dropbox/pool-memory/file.json
+
+# Đếm words (rough estimate: ~1.3 words per token)
+wc -w /home/fong/Dropbox/pool-memory/file.json
+
+# Kiểm tra với tiktoken (nếu có)
+python3 -c "import tiktoken; enc = tiktoken.get_encoding('cl100k_base'); print('Tokens:', len(enc.encode(open('/home/fong/Dropbox/pool-memory/file.json').read())))" 2>/dev/null || echo "tiktoken not available"
+
+# Ước tính token từ characters (conservative)
+echo "Estimated tokens: $(($(wc -c < /home/fong/Dropbox/pool-memory/file.json) / 4))"
+```
+
+### Tìm kiếm không hiệu quả
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Mở rộng từ khóa
+grep -r -i "chrome\|browser\|profile" /home/fong/Dropbox/pool-memory/ --include="*.json"
+
+# Tìm với context
+grep -r -A 5 -B 5 "keyword" /home/fong/Dropbox/pool-memory/ --include="*.json"
+```
+
+---
+
+**Lưu ý**: Tất cả thao tác với pool-memory phải tuân thủ quy tắc này để đảm bảo tính nhất quán và khả năng tìm kiếm hiệu quả.
+
+**Core Principles Summary:**
+- **SSoT (Single Source of Truth)**: Mỗi thông tin chỉ lưu một lần, đảm bảo tính nhất quán
+- **DRY (Don't Repeat Yourself)**: Tìm kiếm trước khi tạo mới, tránh duplicate
+- **Memory Alignment**: Memory phải phản ánh thực tế, luôn align và củng cố
+- **Precise English**: Sử dụng thuật ngữ tiếng Anh chính xác cho tất cả nội dung
+- **Token Limit**: Giới hạn <8000 tokens (~30,000 characters) cho mỗi file JSON
+- **Multi-keyword Search**: Tìm kiếm với nhiều từ khóa tiếng Anh liên quan
+
+**MCP Tools Priority:**
+- **fong-linux-command-executor**: Cho tất cả command line operations
+- **fong-long-file-reader**: Cho đọc file JSON lớn trong pool-memory
+- **fong-php-file-reader**: Cho đọc file PHP (nếu có)
+- **fong-js-file-reader**: Cho đọc file JavaScript (nếu có)
+---

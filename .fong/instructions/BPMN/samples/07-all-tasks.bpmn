@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.40.1">
+  <bpmn:process id="Process_AllTasks" isExecutable="false">
+
+    <bpmn:startEvent id="StartEvent" name="Start">
+      <bpmn:outgoing>Flow1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <!-- Task Types -->
+    <bpmn:task id="Task_Generic" name="Generic Task">
+      <bpmn:incoming>Flow1</bpmn:incoming>
+      <bpmn:outgoing>Flow2</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:userTask id="UserTask" name="User Task&#10;(Review Document)">
+      <bpmn:incoming>Flow2</bpmn:incoming>
+      <bpmn:outgoing>Flow3</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:serviceTask id="ServiceTask" name="Service Task&#10;(API Call)">
+      <bpmn:incoming>Flow3</bpmn:incoming>
+      <bpmn:outgoing>Flow4</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:scriptTask id="ScriptTask" name="Script Task&#10;(Calculate)">
+      <bpmn:incoming>Flow4</bpmn:incoming>
+      <bpmn:outgoing>Flow5</bpmn:outgoing>
+    </bpmn:scriptTask>
+
+    <bpmn:manualTask id="ManualTask" name="Manual Task&#10;(Sign Paper)">
+      <bpmn:incoming>Flow5</bpmn:incoming>
+      <bpmn:outgoing>Flow6</bpmn:outgoing>
+    </bpmn:manualTask>
+
+    <bpmn:businessRuleTask id="BusinessRuleTask" name="Business Rule&#10;(Approve Loan)">
+      <bpmn:incoming>Flow6</bpmn:incoming>
+      <bpmn:outgoing>Flow7</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+
+    <bpmn:sendTask id="SendTask" name="Send Task&#10;(Email Report)">
+      <bpmn:incoming>Flow7</bpmn:incoming>
+      <bpmn:outgoing>Flow8</bpmn:outgoing>
+    </bpmn:sendTask>
+
+    <bpmn:receiveTask id="ReceiveTask" name="Receive Task&#10;(Wait Response)">
+      <bpmn:incoming>Flow8</bpmn:incoming>
+      <bpmn:outgoing>Flow9</bpmn:outgoing>
+    </bpmn:receiveTask>
+
+    <!-- Sub-Process -->
+    <bpmn:subProcess id="SubProcess" name="Sub-Process&#10;(Order Fulfillment)">
+      <bpmn:incoming>Flow9</bpmn:incoming>
+      <bpmn:outgoing>Flow10</bpmn:outgoing>
+    </bpmn:subProcess>
+
+    <!-- Call Activity -->
+    <bpmn:callActivity id="CallActivity" name="Call Activity&#10;(Reusable Process)">
+      <bpmn:incoming>Flow10</bpmn:incoming>
+      <bpmn:outgoing>Flow11</bpmn:outgoing>
+    </bpmn:callActivity>
+
+    <bpmn:endEvent id="EndEvent" name="End">
+      <bpmn:incoming>Flow11</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow1" sourceRef="StartEvent" targetRef="Task_Generic" />
+    <bpmn:sequenceFlow id="Flow2" sourceRef="Task_Generic" targetRef="UserTask" />
+    <bpmn:sequenceFlow id="Flow3" sourceRef="UserTask" targetRef="ServiceTask" />
+    <bpmn:sequenceFlow id="Flow4" sourceRef="ServiceTask" targetRef="ScriptTask" />
+    <bpmn:sequenceFlow id="Flow5" sourceRef="ScriptTask" targetRef="ManualTask" />
+    <bpmn:sequenceFlow id="Flow6" sourceRef="ManualTask" targetRef="BusinessRuleTask" />
+    <bpmn:sequenceFlow id="Flow7" sourceRef="BusinessRuleTask" targetRef="SendTask" />
+    <bpmn:sequenceFlow id="Flow8" sourceRef="SendTask" targetRef="ReceiveTask" />
+    <bpmn:sequenceFlow id="Flow9" sourceRef="ReceiveTask" targetRef="SubProcess" />
+    <bpmn:sequenceFlow id="Flow10" sourceRef="SubProcess" targetRef="CallActivity" />
+    <bpmn:sequenceFlow id="Flow11" sourceRef="CallActivity" targetRef="EndEvent" />
+
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_AllTasks">
+
+      <bpmndi:BPMNShape id="StartEvent_di" bpmnElement="StartEvent">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="145" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Task Shapes (Vertical Layout) -->
+      <bpmndi:BPMNShape id="Task_Generic_di" bpmnElement="Task_Generic">
+        <dc:Bounds x="260" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="UserTask_di" bpmnElement="UserTask">
+        <dc:Bounds x="420" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="ServiceTask_di" bpmnElement="ServiceTask">
+        <dc:Bounds x="580" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="ScriptTask_di" bpmnElement="ScriptTask">
+        <dc:Bounds x="260" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="ManualTask_di" bpmnElement="ManualTask">
+        <dc:Bounds x="420" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="BusinessRuleTask_di" bpmnElement="BusinessRuleTask">
+        <dc:Bounds x="580" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="SendTask_di" bpmnElement="SendTask">
+        <dc:Bounds x="260" y="340" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="ReceiveTask_di" bpmnElement="ReceiveTask">
+        <dc:Bounds x="420" y="340" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="SubProcess_di" bpmnElement="SubProcess">
+        <dc:Bounds x="580" y="340" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="CallActivity_di" bpmnElement="CallActivity">
+        <dc:Bounds x="340" y="470" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="EndEvent_di" bpmnElement="EndEvent">
+        <dc:Bounds x="502" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="510" y="535" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Edges -->
+      <bpmndi:BPMNEdge id="Flow1_di" bpmnElement="Flow1">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="260" y="120" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow2_di" bpmnElement="Flow2">
+        <di:waypoint x="360" y="120" />
+        <di:waypoint x="420" y="120" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow3_di" bpmnElement="Flow3">
+        <di:waypoint x="520" y="120" />
+        <di:waypoint x="580" y="120" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow4_di" bpmnElement="Flow4">
+        <di:waypoint x="630" y="160" />
+        <di:waypoint x="630" y="185" />
+        <di:waypoint x="310" y="185" />
+        <di:waypoint x="310" y="210" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow5_di" bpmnElement="Flow5">
+        <di:waypoint x="360" y="250" />
+        <di:waypoint x="420" y="250" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow6_di" bpmnElement="Flow6">
+        <di:waypoint x="520" y="250" />
+        <di:waypoint x="580" y="250" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow7_di" bpmnElement="Flow7">
+        <di:waypoint x="630" y="290" />
+        <di:waypoint x="630" y="315" />
+        <di:waypoint x="310" y="315" />
+        <di:waypoint x="310" y="340" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow8_di" bpmnElement="Flow8">
+        <di:waypoint x="360" y="380" />
+        <di:waypoint x="420" y="380" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow9_di" bpmnElement="Flow9">
+        <di:waypoint x="520" y="380" />
+        <di:waypoint x="580" y="380" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow10_di" bpmnElement="Flow10">
+        <di:waypoint x="630" y="420" />
+        <di:waypoint x="630" y="445" />
+        <di:waypoint x="390" y="445" />
+        <di:waypoint x="390" y="470" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow11_di" bpmnElement="Flow11">
+        <di:waypoint x="440" y="510" />
+        <di:waypoint x="502" y="510" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

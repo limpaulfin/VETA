@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  id="Definitions_EventTypes"
+  targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:process id="Process_EventTypes" name="Event Types Example" isExecutable="false">
+
+    <!-- Timer Start Event -->
+    <bpmn:startEvent id="StartEvent_Timer" name="Daily&#10;8:00 AM">
+      <bpmn:timerEventDefinition/>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <!-- Task 1 -->
+    <bpmn:task id="Task_GenerateReport" name="Generate&#10;Report">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Intermediate Message Event -->
+    <bpmn:intermediateCatchEvent id="Event_WaitApproval" name="Wait for&#10;Approval">
+      <bpmn:messageEventDefinition/>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:intermediateCatchEvent>
+
+    <!-- Task 2 -->
+    <bpmn:task id="Task_ProcessApproval" name="Process&#10;Approval">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_Check" name="Approved?">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5_Yes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_5_No</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- Success Path -->
+    <bpmn:task id="Task_SendReport" name="Send&#10;Report">
+      <bpmn:incoming>Flow_5_Yes</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Message End Event -->
+    <bpmn:endEvent id="EndEvent_Message" name="Report&#10;Sent">
+      <bpmn:messageEventDefinition/>
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Error Path -->
+    <bpmn:task id="Task_NotifyError" name="Notify&#10;Rejection">
+      <bpmn:incoming>Flow_5_No</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Error End Event -->
+    <bpmn:endEvent id="EndEvent_Error" name="Rejected">
+      <bpmn:errorEventDefinition/>
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_Timer" targetRef="Task_GenerateReport"/>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_GenerateReport" targetRef="Event_WaitApproval"/>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Event_WaitApproval" targetRef="Task_ProcessApproval"/>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_ProcessApproval" targetRef="Gateway_Check"/>
+    <bpmn:sequenceFlow id="Flow_5_Yes" name="Yes" sourceRef="Gateway_Check" targetRef="Task_SendReport"/>
+    <bpmn:sequenceFlow id="Flow_5_No" name="No" sourceRef="Gateway_Check" targetRef="Task_NotifyError"/>
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_SendReport" targetRef="EndEvent_Message"/>
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_NotifyError" targetRef="EndEvent_Error"/>
+
+  </bpmn:process>
+
+  <!-- Diagram Information -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_EventTypes">
+
+      <!-- Timer Start Event -->
+      <bpmndi:BPMNShape id="Shape_StartEvent_Timer" bpmnElement="StartEvent_Timer">
+        <dc:Bounds x="100" y="182" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="97" y="225" width="43" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Generate Report -->
+      <bpmndi:BPMNShape id="Shape_Task_GenerateReport" bpmnElement="Task_GenerateReport">
+        <dc:Bounds x="200" y="160" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Wait Approval Event -->
+      <bpmndi:BPMNShape id="Shape_Event_WaitApproval" bpmnElement="Event_WaitApproval">
+        <dc:Bounds x="362" y="182" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="352" y="225" width="56" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Process Approval -->
+      <bpmndi:BPMNShape id="Shape_Task_ProcessApproval" bpmnElement="Task_ProcessApproval">
+        <dc:Bounds x="460" y="160" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Gateway -->
+      <bpmndi:BPMNShape id="Shape_Gateway_Check" bpmnElement="Gateway_Check" isMarkerVisible="true">
+        <dc:Bounds x="625" y="175" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="685" y="190" width="70" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Send Report (Top) -->
+      <bpmndi:BPMNShape id="Shape_Task_SendReport" bpmnElement="Task_SendReport">
+        <dc:Bounds x="740" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Message End Event -->
+      <bpmndi:BPMNShape id="Shape_EndEvent_Message" bpmnElement="EndEvent_Message">
+        <dc:Bounds x="902" y="102" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="896" y="145" width="48" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Notify Error (Bottom) -->
+      <bpmndi:BPMNShape id="Shape_Task_NotifyError" bpmnElement="Task_NotifyError">
+        <dc:Bounds x="740" y="240" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Error End Event -->
+      <bpmndi:BPMNShape id="Shape_EndEvent_Error" bpmnElement="EndEvent_Error">
+        <dc:Bounds x="902" y="262" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="896" y="305" width="48" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Edges -->
+      <bpmndi:BPMNEdge id="Edge_Flow_1" bpmnElement="Flow_1">
+        <di:waypoint x="136" y="200"/>
+        <di:waypoint x="200" y="200"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_2" bpmnElement="Flow_2">
+        <di:waypoint x="300" y="200"/>
+        <di:waypoint x="362" y="200"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_3" bpmnElement="Flow_3">
+        <di:waypoint x="398" y="200"/>
+        <di:waypoint x="460" y="200"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_4" bpmnElement="Flow_4">
+        <di:waypoint x="560" y="200"/>
+        <di:waypoint x="625" y="200"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_5_Yes" bpmnElement="Flow_5_Yes">
+        <di:waypoint x="650" y="175"/>
+        <di:waypoint x="650" y="120"/>
+        <di:waypoint x="740" y="120"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="658" y="145" width="20" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_5_No" bpmnElement="Flow_5_No">
+        <di:waypoint x="650" y="225"/>
+        <di:waypoint x="650" y="280"/>
+        <di:waypoint x="740" y="280"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="656" y="250" width="15" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_6" bpmnElement="Flow_6">
+        <di:waypoint x="840" y="120"/>
+        <di:waypoint x="902" y="120"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_7" bpmnElement="Flow_7">
+        <di:waypoint x="840" y="280"/>
+        <di:waypoint x="902" y="280"/>
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</bpmn:definitions>

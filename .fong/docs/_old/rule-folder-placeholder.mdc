@@ -1,0 +1,46 @@
+# Rule: Folder Placeholder File
+
+*Mod by Fong on 2025-07-24--12-27-PM*
+
+## Mục đích
+Đảm bảo mỗi folder đều có file placeholder để dễ dàng truy cập và quản lý.
+
+## Quy tắc bắt buộc
+Khi tạo folder mới, **PHẢI** tạo file placeholder với tên `{folder-name}-folder.txt` trong folder đó.
+
+## Cấu trúc file placeholder
+- **Tên file**: `{folder-name}-folder.txt`
+- **Nội dung**: File rỗng (không có nội dung)
+- **Mục đích**: Giúp truy cập folder nhanh chóng
+
+## Ví dụ
+```
+my-project/
+├── src/
+│   └── src-folder.txt
+├── docs/
+│   └── docs-folder.txt
+└── tests/
+    └── tests-folder.txt
+```
+
+## Lệnh tạo tự động
+```bash
+# Tạo folder và file placeholder cùng lúc
+mkdir -p folder_name && touch folder_name/folder_name-folder.txt
+```
+
+## Áp dụng
+- Áp dụng cho tất cả folder mới được tạo
+- Áp dụng cho folder hiện có chưa có file placeholder
+- Tuân thủ quy tắc "Always Double-Check" trước khi tạo
+
+---
+uuid: 1230d5a4-4ac6-4a04-96d6-7063bf2adbe2
+last-edited: "2025-07-24--12-27-PM GMT+7"
+by: Fong & Asi
+desc: "Quy tắc tạo file placeholder cho mỗi folder để dễ truy cập."
+description:
+globs:
+alwaysApply: true
+---

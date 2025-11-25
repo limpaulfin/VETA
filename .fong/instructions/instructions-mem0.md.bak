@@ -1,0 +1,219 @@
+# Mem0 API Integration Instructions
+
+**Version**: 2025-09-14  
+**Architecture**: SOLID Principles  
+**Location**: `.fong/tools/mem0/`  
+
+## Overview
+
+This instruction set provides precise guidance for utilizing the Mem0 API integration system. The architecture follows SOLID principles with each script performing a single responsibility, ensuring maintainability and extensibility.
+
+## Directory Structure
+
+```
+.fong/tools/mem0/
+├── .env            # API configuration and endpoints
+├── common.sh       # Shared functions and utilities
+├── add.sh          # Add memories (Single Responsibility)
+├── search.sh       # Search memories (Single Responsibility)
+├── get.sh          # Retrieve all memories (Single Responsibility) 
+├── update.sh       # Update existing memory (Single Responsibility)
+├── delete.sh       # Delete memories (Single Responsibility)
+├── align.sh        # Project-reality alignment (Single Responsibility)
+└── mem0.sh         # Main orchestrator script
+```
+
+## Configuration
+
+### Environment Variables (.env)
+- `MEM0_API_KEY`: Authentication token for Mem0 API
+- `MEM0_BASE_URL`: Base API endpoint (https://api.mem0.ai)
+- `MEM0_*_ENDPOINT`: Specific operation endpoints
+- `MEM0_DEFAULT_*`: Default parameters for operations
+
+## Core Operations
+
+### 1. Add Memory
+```bash
+./mem0.sh add <project_name> <content> [user_id]
+```
+**Purpose**: Creates new memory entry for specified project  
+**Implementation**: `add.sh`  
+**Parameters**:
+- `project_name`: Project identifier (required)
+- `content`: Memory content (required)
+- `user_id`: User identifier (optional, defaults to `{project_name}-user`)
+
+**Example**:
+```bash
+./mem0.sh add 'frontend-project' 'User prefers React over Vue.js'
+```
+
+### 2. Search Memories
+```bash
+./mem0.sh search <query> [project_name] [user_id] [top_k]
+```
+**Purpose**: Retrieves memories matching search query  
+**Implementation**: `search.sh`  
+**Parameters**:
+- `query`: Search query string (required)
+- `project_name`: Filter by project (optional)
+- `user_id`: Filter by user (optional) 
+- `top_k`: Result limit (optional, default: 10)
+
+**Example**:
+```bash
+./mem0.sh search 'database preferences' 'backend-project'
+```
+
+### 3. Retrieve All Memories
+```bash
+./mem0.sh get [project_name] [user_id] [page] [page_size]
+```
+**Purpose**: Lists all memories with optional filtering  
+**Implementation**: `get.sh`  
+**Parameters**: All optional
+- `project_name`: Filter by project
+- `user_id`: Filter by user
+- `page`: Pagination page number (default: 1)
+- `page_size`: Items per page (default: 50)
+
+**Example**:
+```bash
+./mem0.sh get 'api-project' '' 1 25
+```
+
+### 4. Update Memory
+```bash
+./mem0.sh update <memory_id> <new_content> [metadata_json]
+```
+**Purpose**: Modifies existing memory entry  
+**Implementation**: `update.sh`  
+**Parameters**:
+- `memory_id`: UUID of target memory (required)
+- `new_content`: Updated content (required)
+- `metadata_json`: Additional metadata (optional JSON)
+
+**Example**:
+```bash
+./mem0.sh update 'uuid-123' 'Updated preference: TypeScript over JavaScript'
+```
+
+### 5. Delete Memory
+```bash
+# Single memory deletion
+./mem0.sh delete <memory_id>
+
+# Bulk deletion by project
+./mem0.sh delete --project <project_name>
+
+# Bulk deletion by user
+./mem0.sh delete --user <user_id>
+```
+**Purpose**: Removes memory entries  
+**Implementation**: `delete.sh`  
+**Safety**: Requires confirmation before deletion
+
+**Example**:
+```bash
+./mem0.sh delete --project 'deprecated-project'
+```
+
+### 6. Project Alignment
+```bash
+./mem0.sh align <project_path> [project_name] [user_id]
+```
+**Purpose**: Synchronizes project memory with current codebase reality  
+**Implementation**: `align.sh`  
+**Process**:
+1. Analyzes project structure and dependencies
+2. Creates comprehensive memory entry
+3. Generates reference file for future operations
+
+**Example**:
+```bash
+./mem0.sh align '/home/user/my-project' 'my-project'
+```
+
+## Architecture Principles
+
+### SOLID Compliance
+- **Single Responsibility**: Each script handles one operation type
+- **Open/Closed**: Extensible without modifying existing scripts
+- **Liskov Substitution**: Scripts can be substituted through common interface
+- **Interface Segregation**: Specific interfaces for each operation
+- **Dependency Inversion**: Dependencies on abstract common.sh functions
+
+### DRY (Don't Repeat Yourself)
+- Shared functions centralized in `common.sh`
+- Single source of truth for configuration in `.env`
+- No duplicate code across operation scripts
+
+### Error Handling
+- Input validation for all required parameters
+- JSON validation for API payloads
+- API error response handling
+- User confirmation for destructive operations
+
+## Integration Workflow
+
+### For Project-Specific Operations
+1. Use `align.sh` to establish project baseline
+2. Use `add.sh` for incremental memory creation
+3. Use `search.sh` for memory retrieval
+4. Use `get.sh` for comprehensive project memory review
+
+### For Cross-Project Operations
+1. Use `search.sh` without project filter for global search
+2. Use `get.sh` without filters for organization-wide memory audit
+
+## Troubleshooting
+
+### API Key Issues
+- Verify `MEM0_API_KEY` in `.env`
+- Obtain valid key from https://app.mem0.ai/dashboard/api-keys
+
+### Permission Errors
+- Ensure all scripts are executable: `chmod +x *.sh`
+- Verify file paths in commands
+
+### Response Format Issues
+- Check API endpoint URLs in `.env`
+- Validate JSON payload format in script output
+
+## Best Practices
+
+### Memory Content
+- Use descriptive, searchable content
+- Include context and rationale in memory entries
+- Maintain consistency in terminology across project
+
+### Project Management
+- Regular alignment operations for active projects
+- Periodic cleanup of deprecated project memories
+- Use meaningful project and user identifiers
+
+### Security
+- Protect API keys in `.env` file permissions
+- Do not commit API keys to version control
+- Use project-specific user identifiers for access control
+
+## Command Reference Quick Sheet
+
+```bash
+# Basic operations
+./mem0.sh help                                    # Show usage
+./mem0.sh add 'proj' 'content'                   # Add memory
+./mem0.sh search 'query' 'proj'                  # Search project
+./mem0.sh get 'proj'                             # Get project memories
+./mem0.sh update 'uuid' 'content'               # Update memory
+./mem0.sh delete 'uuid'                          # Delete memory
+./mem0.sh align '/path/to/project' 'proj'       # Align project
+
+# Management operations  
+./mem0.sh stats                                  # Show statistics
+./mem0.sh projects                               # List projects
+./mem0.sh delete --project 'old-proj'           # Cleanup project
+```
+
+This instruction set ensures precise, consistent usage of the Mem0 integration system while maintaining architectural integrity and operational efficiency.

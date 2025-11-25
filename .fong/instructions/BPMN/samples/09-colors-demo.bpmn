@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0"
+                  id="Definitions_1"
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:process id="Process_ColorDemo" isExecutable="false">
+
+    <!-- Start Event (Green) -->
+    <bpmn:startEvent id="StartEvent_1" name="Start"
+                     bioc:stroke="#008000"
+                     bioc:fill="#CCFFCC">
+      <bpmn:outgoing>Flow1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <!-- Normal Task (Blue) -->
+    <bpmn:task id="Task_Normal" name="Process Request"
+               bioc:stroke="#0000FF"
+               bioc:fill="#CCE5FF">
+
+      <bpmn:incoming>Flow1</bpmn:incoming>
+      <bpmn:outgoing>Flow2</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_Decision" name="Valid?"
+                          bioc:stroke="#FF8C00"
+                          bioc:fill="#FFE5CC">
+
+      <bpmn:incoming>Flow2</bpmn:incoming>
+      <bpmn:outgoing>Flow_Success</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Error</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- Success Path Task (Green) -->
+    <bpmn:task id="Task_Success" name="Save Data"
+               bioc:stroke="#00CC00"
+               bioc:fill="#D9FFD9">
+
+      <bpmn:incoming>Flow_Success</bpmn:incoming>
+      <bpmn:outgoing>Flow3</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Error Path Task (Red) -->
+    <bpmn:task id="Task_Error" name="Handle Error"
+               bioc:stroke="#CC0000"
+               bioc:fill="#FFD9D9">
+
+      <bpmn:incoming>Flow_Error</bpmn:incoming>
+      <bpmn:outgoing>Flow4</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Success End (Green) -->
+    <bpmn:endEvent id="EndEvent_Success" name="Success"
+                   bioc:stroke="#00AA00"
+                   bioc:fill="#B3FFB3">
+
+      <bpmn:incoming>Flow3</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Error End (Red) -->
+    <bpmn:endEvent id="EndEvent_Error" name="Failed"
+                   bioc:stroke="#AA0000"
+                   bioc:fill="#FFB3B3">
+
+      <bpmn:incoming>Flow4</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows with Colors -->
+    <bpmn:sequenceFlow id="Flow1" sourceRef="StartEvent_1" targetRef="Task_Normal"
+                       bioc:stroke="#0066CC" />
+
+    <bpmn:sequenceFlow id="Flow2" sourceRef="Task_Normal" targetRef="Gateway_Decision"
+                       bioc:stroke="#0066CC" />
+
+    <bpmn:sequenceFlow id="Flow_Success" name="Yes" sourceRef="Gateway_Decision" targetRef="Task_Success"
+                       bioc:stroke="#00AA00" />
+
+    <bpmn:sequenceFlow id="Flow_Error" name="No" sourceRef="Gateway_Decision" targetRef="Task_Error"
+                       bioc:stroke="#AA0000" />
+
+    <bpmn:sequenceFlow id="Flow3" sourceRef="Task_Success" targetRef="EndEvent_Success"
+                       bioc:stroke="#00AA00" />
+
+    <bpmn:sequenceFlow id="Flow4" sourceRef="Task_Error" targetRef="EndEvent_Error"
+                       bioc:stroke="#AA0000" />
+
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_ColorDemo">
+
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="145" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_Normal_di" bpmnElement="Task_Normal">
+        <dc:Bounds x="240" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Gateway_Decision_di" bpmnElement="Gateway_Decision">
+        <dc:Bounds x="395" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="405" y="71" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_Success_di" bpmnElement="Task_Success">
+        <dc:Bounds x="500" y="50" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_Error_di" bpmnElement="Task_Error">
+        <dc:Bounds x="500" y="170" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="EndEvent_Success_di" bpmnElement="EndEvent_Success">
+        <dc:Bounds x="662" y="72" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="658" y="115" width="44" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="EndEvent_Error_di" bpmnElement="EndEvent_Error">
+        <dc:Bounds x="662" y="192" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="664" y="235" width="33" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="Flow1_di" bpmnElement="Flow1">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="240" y="120" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow2_di" bpmnElement="Flow2">
+        <di:waypoint x="340" y="120" />
+        <di:waypoint x="395" y="120" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_Success_di" bpmnElement="Flow_Success">
+        <di:waypoint x="420" y="95" />
+        <di:waypoint x="420" y="90" />
+        <di:waypoint x="500" y="90" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="445" y="73" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_Error_di" bpmnElement="Flow_Error">
+        <di:waypoint x="420" y="145" />
+        <di:waypoint x="420" y="210" />
+        <di:waypoint x="500" y="210" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="448" y="193" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow3_di" bpmnElement="Flow3">
+        <di:waypoint x="600" y="90" />
+        <di:waypoint x="662" y="90" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow4_di" bpmnElement="Flow4">
+        <di:waypoint x="600" y="210" />
+        <di:waypoint x="662" y="210" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</bpmn:definitions>

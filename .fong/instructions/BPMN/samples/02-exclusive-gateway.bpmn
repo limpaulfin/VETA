@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  id="Definitions_ExclusiveGateway"
+  targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:process id="Process_ExclusiveGateway" name="Exclusive Gateway Example" isExecutable="false">
+
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_1" name="Start">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <!-- Task: Check Amount -->
+    <bpmn:task id="Task_CheckAmount" name="Check&#10;Amount">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Exclusive Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_Amount" name="Amount&#10;&gt; $1000?">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_High</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Low</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- High Amount Path -->
+    <bpmn:task id="Task_ManagerApproval" name="Manager&#10;Approval">
+      <bpmn:incoming>Flow_High</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Low Amount Path -->
+    <bpmn:task id="Task_AutoApproval" name="Auto&#10;Approval">
+      <bpmn:incoming>Flow_Low</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Merge Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_Merge">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- Task: Process Payment -->
+    <bpmn:task id="Task_ProcessPayment" name="Process&#10;Payment">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- End Event -->
+    <bpmn:endEvent id="EndEvent_1" name="End">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_CheckAmount"/>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_CheckAmount" targetRef="Gateway_Amount"/>
+    <bpmn:sequenceFlow id="Flow_High" name="Yes" sourceRef="Gateway_Amount" targetRef="Task_ManagerApproval"/>
+    <bpmn:sequenceFlow id="Flow_Low" name="No" sourceRef="Gateway_Amount" targetRef="Task_AutoApproval"/>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_ManagerApproval" targetRef="Gateway_Merge"/>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_AutoApproval" targetRef="Gateway_Merge"/>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Gateway_Merge" targetRef="Task_ProcessPayment"/>
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_ProcessPayment" targetRef="EndEvent_1"/>
+
+  </bpmn:process>
+
+  <!-- Diagram Information -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_ExclusiveGateway">
+
+      <!-- Start Event -->
+      <bpmndi:BPMNShape id="Shape_StartEvent_1" bpmnElement="StartEvent_1">
+        <dc:Bounds x="100" y="182" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="106" y="225" width="24" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Check Amount Task -->
+      <bpmndi:BPMNShape id="Shape_Task_CheckAmount" bpmnElement="Task_CheckAmount">
+        <dc:Bounds x="200" y="160" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Exclusive Gateway -->
+      <bpmndi:BPMNShape id="Shape_Gateway_Amount" bpmnElement="Gateway_Amount" isMarkerVisible="true">
+        <dc:Bounds x="365" y="175" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="320" y="235" width="80" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Manager Approval (Top Path) -->
+      <bpmndi:BPMNShape id="Shape_Task_ManagerApproval" bpmnElement="Task_ManagerApproval">
+        <dc:Bounds x="480" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Auto Approval (Bottom Path) -->
+      <bpmndi:BPMNShape id="Shape_Task_AutoApproval" bpmnElement="Task_AutoApproval">
+        <dc:Bounds x="480" y="240" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Merge Gateway -->
+      <bpmndi:BPMNShape id="Shape_Gateway_Merge" bpmnElement="Gateway_Merge" isMarkerVisible="true">
+        <dc:Bounds x="645" y="175" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Process Payment Task -->
+      <bpmndi:BPMNShape id="Shape_Task_ProcessPayment" bpmnElement="Task_ProcessPayment">
+        <dc:Bounds x="760" y="160" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- End Event -->
+      <bpmndi:BPMNShape id="Shape_EndEvent_1" bpmnElement="EndEvent_1">
+        <dc:Bounds x="922" y="182" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="931" y="225" width="20" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Edges -->
+      <bpmndi:BPMNEdge id="Edge_Flow_1" bpmnElement="Flow_1">
+        <di:waypoint x="136" y="200"/>
+        <di:waypoint x="200" y="200"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_2" bpmnElement="Flow_2">
+        <di:waypoint x="300" y="200"/>
+        <di:waypoint x="365" y="200"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_High" bpmnElement="Flow_High">
+        <di:waypoint x="390" y="175"/>
+        <di:waypoint x="390" y="120"/>
+        <di:waypoint x="480" y="120"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="398" y="145" width="20" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_Low" bpmnElement="Flow_Low">
+        <di:waypoint x="390" y="225"/>
+        <di:waypoint x="390" y="280"/>
+        <di:waypoint x="480" y="280"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="399" y="250" width="15" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_3" bpmnElement="Flow_3">
+        <di:waypoint x="580" y="120"/>
+        <di:waypoint x="670" y="120"/>
+        <di:waypoint x="670" y="175"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_4" bpmnElement="Flow_4">
+        <di:waypoint x="580" y="280"/>
+        <di:waypoint x="670" y="280"/>
+        <di:waypoint x="670" y="225"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_5" bpmnElement="Flow_5">
+        <di:waypoint x="695" y="200"/>
+        <di:waypoint x="760" y="200"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_6" bpmnElement="Flow_6">
+        <di:waypoint x="860" y="200"/>
+        <di:waypoint x="922" y="200"/>
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</bpmn:definitions>

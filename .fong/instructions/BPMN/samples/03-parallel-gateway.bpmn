@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  id="Definitions_ParallelGateway"
+  targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:process id="Process_ParallelGateway" name="Parallel Gateway Example" isExecutable="false">
+
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_1" name="Order&#10;Received">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <!-- Parallel Gateway (Fork) -->
+    <bpmn:parallelGateway id="Gateway_Fork" name="">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2a</bpmn:outgoing>
+      <bpmn:outgoing>Flow_2b</bpmn:outgoing>
+      <bpmn:outgoing>Flow_2c</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <!-- Parallel Task 1 -->
+    <bpmn:task id="Task_CheckInventory" name="Check&#10;Inventory">
+      <bpmn:incoming>Flow_2a</bpmn:incoming>
+      <bpmn:outgoing>Flow_3a</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Parallel Task 2 -->
+    <bpmn:task id="Task_ProcessPayment" name="Process&#10;Payment">
+      <bpmn:incoming>Flow_2b</bpmn:incoming>
+      <bpmn:outgoing>Flow_3b</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Parallel Task 3 -->
+    <bpmn:task id="Task_NotifyCustomer" name="Notify&#10;Customer">
+      <bpmn:incoming>Flow_2c</bpmn:incoming>
+      <bpmn:outgoing>Flow_3c</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Parallel Gateway (Join) -->
+    <bpmn:parallelGateway id="Gateway_Join" name="">
+      <bpmn:incoming>Flow_3a</bpmn:incoming>
+      <bpmn:incoming>Flow_3b</bpmn:incoming>
+      <bpmn:incoming>Flow_3c</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <!-- Final Task -->
+    <bpmn:task id="Task_ShipOrder" name="Ship&#10;Order">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- End Event -->
+    <bpmn:endEvent id="EndEvent_1" name="Order&#10;Completed">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Gateway_Fork"/>
+    <bpmn:sequenceFlow id="Flow_2a" sourceRef="Gateway_Fork" targetRef="Task_CheckInventory"/>
+    <bpmn:sequenceFlow id="Flow_2b" sourceRef="Gateway_Fork" targetRef="Task_ProcessPayment"/>
+    <bpmn:sequenceFlow id="Flow_2c" sourceRef="Gateway_Fork" targetRef="Task_NotifyCustomer"/>
+    <bpmn:sequenceFlow id="Flow_3a" sourceRef="Task_CheckInventory" targetRef="Gateway_Join"/>
+    <bpmn:sequenceFlow id="Flow_3b" sourceRef="Task_ProcessPayment" targetRef="Gateway_Join"/>
+    <bpmn:sequenceFlow id="Flow_3c" sourceRef="Task_NotifyCustomer" targetRef="Gateway_Join"/>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Gateway_Join" targetRef="Task_ShipOrder"/>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_ShipOrder" targetRef="EndEvent_1"/>
+
+  </bpmn:process>
+
+  <!-- Diagram Information -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_ParallelGateway">
+
+      <!-- Start Event -->
+      <bpmndi:BPMNShape id="Shape_StartEvent_1" bpmnElement="StartEvent_1">
+        <dc:Bounds x="100" y="192" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="94" y="235" width="48" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Fork Gateway -->
+      <bpmndi:BPMNShape id="Shape_Gateway_Fork" bpmnElement="Gateway_Fork">
+        <dc:Bounds x="200" y="185" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Check Inventory (Top) -->
+      <bpmndi:BPMNShape id="Shape_Task_CheckInventory" bpmnElement="Task_CheckInventory">
+        <dc:Bounds x="320" y="60" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Process Payment (Middle) -->
+      <bpmndi:BPMNShape id="Shape_Task_ProcessPayment" bpmnElement="Task_ProcessPayment">
+        <dc:Bounds x="320" y="170" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Notify Customer (Bottom) -->
+      <bpmndi:BPMNShape id="Shape_Task_NotifyCustomer" bpmnElement="Task_NotifyCustomer">
+        <dc:Bounds x="320" y="280" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Join Gateway -->
+      <bpmndi:BPMNShape id="Shape_Gateway_Join" bpmnElement="Gateway_Join">
+        <dc:Bounds x="490" y="185" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Ship Order -->
+      <bpmndi:BPMNShape id="Shape_Task_ShipOrder" bpmnElement="Task_ShipOrder">
+        <dc:Bounds x="610" y="170" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- End Event -->
+      <bpmndi:BPMNShape id="Shape_EndEvent_1" bpmnElement="EndEvent_1">
+        <dc:Bounds x="772" y="192" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="768" y="235" width="44" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Edges -->
+      <bpmndi:BPMNEdge id="Edge_Flow_1" bpmnElement="Flow_1">
+        <di:waypoint x="136" y="210"/>
+        <di:waypoint x="200" y="210"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_2a" bpmnElement="Flow_2a">
+        <di:waypoint x="225" y="185"/>
+        <di:waypoint x="225" y="100"/>
+        <di:waypoint x="320" y="100"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_2b" bpmnElement="Flow_2b">
+        <di:waypoint x="250" y="210"/>
+        <di:waypoint x="320" y="210"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_2c" bpmnElement="Flow_2c">
+        <di:waypoint x="225" y="235"/>
+        <di:waypoint x="225" y="320"/>
+        <di:waypoint x="320" y="320"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_3a" bpmnElement="Flow_3a">
+        <di:waypoint x="420" y="100"/>
+        <di:waypoint x="515" y="100"/>
+        <di:waypoint x="515" y="185"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_3b" bpmnElement="Flow_3b">
+        <di:waypoint x="420" y="210"/>
+        <di:waypoint x="490" y="210"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_3c" bpmnElement="Flow_3c">
+        <di:waypoint x="420" y="320"/>
+        <di:waypoint x="515" y="320"/>
+        <di:waypoint x="515" y="235"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_4" bpmnElement="Flow_4">
+        <di:waypoint x="540" y="210"/>
+        <di:waypoint x="610" y="210"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_5" bpmnElement="Flow_5">
+        <di:waypoint x="710" y="210"/>
+        <di:waypoint x="772" y="210"/>
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</bpmn:definitions>

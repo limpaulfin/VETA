@@ -1,0 +1,33 @@
+{
+  "name": "Python Code Style & Boilerplate Pattern",
+  "version": "1.0.1",
+  "created": "2025-11-25T14:06:00+07:00",
+  "updated": "2025-11-25T14:08:00+07:00",
+  "type": "Code Style Guide",
+  "language": "Python",
+
+  "description": "Python boilerplate patterns với shared .venv, JSONL logging, SOLID compliance (<100 LOC rule)",
+
+  "documentation": {
+    "main_index": "/home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/docs/python-boilerplate-guide/00-index.md",
+    "all_files": "/home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/docs/python-boilerplate-guide/*",
+    "read_command": "cat /home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/docs/python-boilerplate-guide/*.md"
+  },
+
+  "core_principles": {
+    "SRP": "Max 100 LOC per file (code only)",
+    "shared_venv": "Check root .venv first → reuse → create",
+    "logging": "JSONL format (ts, run_id, step, level, message)",
+    "traceability": "UUID-tagged entry points (main-{uuid}.py)"
+  },
+
+  "usage": {
+    "read_index": "cat /home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/docs/python-boilerplate-guide/00-index.md",
+    "read_all": "cat /home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/docs/python-boilerplate-guide/*.md",
+    "list_files": "ls /home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/docs/python-boilerplate-guide/"
+  },
+
+  "okr": "AI đọc 00-index.md → tự navigate bằng cat với absolute paths",
+
+  "status": "Active"
+}

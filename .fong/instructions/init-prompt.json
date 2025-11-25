@@ -1,0 +1,87 @@
+{
+  "FOUNDATIONAL_REFERENCE": "INHERIT ALL core principles from /home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/.fong/init-prompt.md - THIS FILE ONLY CONTAINS PROJECT-SPECIFIC OVERRIDES",
+  "name": "VETA Project Init Prompt",
+  "updated": "2025-11-25T14:05:00+07:00",
+  "description": "VETA (Viet-Eng-Term-Analyzer) specific configuration overrides - inherits from boiler-plate",
+  "CRITICAL_NOTICE": "⚠️ READ FIRST: /home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/.fong/init-prompt.md for ALL core principles, mindset, workflow, MCP tools, and standards. This file ONLY contains VETA project-specific overrides.",
+  "inheritance": {
+    "base_config": "/home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/.fong/init-prompt.md",
+    "override_policy": "This file ONLY contains project-specific overrides for VETA",
+    "dry_principle": "All core principles, mindset, workflow, MCP tools, code standards are inherited from boiler-plate - DO NOT DUPLICATE HERE"
+  },
+  "project_specific_overrides": {
+    "project_info": {
+      "name": "VETA (Viet-Eng-Term-Analyzer)",
+      "description": "Phân tích ngôn ngữ đa ngữ (Anh-Việt) sử dụng OpenAI API để đếm từ, xác định thuật ngữ không thể Việt hóa và phân tích code-switching",
+      "architecture": "Python modular: entry point → analyzer → OpenAI API",
+      "key_features": [
+        "Phân tích văn bản đa ngôn ngữ (Anh-Việt)",
+        "Đếm chính xác số từ English/Vietnamese",
+        "Xác định untranslatable English words với lý do",
+        "Code-switching analysis",
+        "JSON structured output (OpenAI JSON mode)",
+        "Error handling toàn diện"
+      ]
+    },
+    "configuration": {
+      "python": {
+        "venv_path": "/home/fong/Projects/VETA/.venv",
+        "enforce_venv": true,
+        "entry_point": "main-fc70324b.sh",
+        "note": "All Python scripts must run with this venv"
+      }
+    },
+    "environment_variables": {
+      "OPENAI_API_KEY": "Required for OpenAI API calls",
+      "OPENAI_MODEL": "Default: gpt-4o-mini (can use gpt-4o)"
+    },
+    "file_structure": {
+      "entry_points": {
+        "main-fc70324b.sh": "Bash wrapper (handles venv, deps)",
+        "main-fc70324b.py": "Python entry point (calls analyzer)"
+      },
+      "modular_architecture": {
+        "src/veta_analyzer.py": "Core analyzer module with OpenAI API integration",
+        "requirements.txt": "Dependencies (openai, python-dotenv)",
+        ".env.example": "Environment template"
+      }
+    },
+    "development_commands": {
+      "setup": "cp .env.example .env && # Add OPENAI_API_KEY",
+      "run": "./main-fc70324b.sh 'Text to analyze'",
+      "test_example": "./main-fc70324b.sh 'Hiện tại, tôi đang học về Prompt Engineering'"
+    },
+    "development_notes": {
+      "file_limits": "Each module < 100 LOC per CLAUDE.md standards",
+      "patterns": [
+        "OpenAI JSON mode for structured output",
+        "Error handling: RateLimitError, APIError, JSONDecodeError",
+        "Type hints: from __future__ import annotations",
+        "Modular design: analyzer separate from entry point"
+      ],
+      "separation_of_concerns": "Entry point → Analyzer → OpenAI API"
+    }
+  },
+  "required_reads": [
+    {
+      "file": "/home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/.fong/init-prompt.md",
+      "purpose": "ALL core principles, mindset, workflow, MCP tools, code standards - MUST READ FIRST",
+      "priority": "CRITICAL"
+    },
+    {
+      "file": "./.fong/instructions/fongtools.json",
+      "purpose": "Tool catalog - Complete list of MCP servers and instruction files",
+      "priority": "HIGH"
+    },
+    {
+      "file": "./README.md",
+      "purpose": "VETA specific project instructions and usage",
+      "priority": "HIGH"
+    },
+    {
+      "file": "/home/fong/Projects/dropbox-obsidian/FongObsidian/00/VETA.md",
+      "purpose": "Original VETA concept note with detailed examples",
+      "priority": "MEDIUM"
+    }
+  ]
+}

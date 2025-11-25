@@ -1,0 +1,473 @@
+
+# Deutschfuns LMS - Memory Alignment Protocol
+
+This document establishes systematic procedures for maintaining accurate synchronization between project memory (`.memory/`) and the actual codebase. It ensures Single Source of Truth (SSoT), prevents data duplication (DRY), and maintains simplicity (KISS) in the memory management system.
+
+## Core Alignment Principles
+
+### 1. Consistency Assurance (SSoT)
+All technical information about features, modules, or code components stored in `.memory/` must accurately reflect the current state of the actual codebase. Only one authoritative source of information should exist for each concept.
+
+### 2. Duplication Prevention (DRY)
+Eliminate redundant information storage across multiple memory locations. When referencing identical information, use pointers/references to the canonical source rather than duplicating content.
+
+### 3. Simplicity Maintenance (KISS)
+Store only essential, comprehensible information focused on the most critical aspects of the code. Apply the 80/20 principle: 20% of the most important information addresses 80% of the needs.
+
+## Alignment Triggers
+
+The alignment process must be activated under the following conditions:
+
+### Scheduled/Change-Based Triggers
+- Periodic alignment cycles or after significant codebase modifications
+- Post-refactoring operations that alter structure, logic, or APIs
+- After adding new features or modules to the codebase
+
+### User-Initiated Triggers
+Direct user requests containing alignment keywords or context provision:
+- Keywords: "align memory", "align context", "synchronize memory", "calibrate memory"
+- When users provide code files (`.php`, `.js`, etc.) and request analysis or modifications
+- When users supply context and request AI actions based on that context
+
+### Context Window Alignment Triggers
+When users request alignment with task context window, follow fongtask.md workflow:
+- Keywords: "align with context", "sync with context window", "load context"
+- **Pre-task Context Loading**: Read task context files using `tree` command before starting work
+- **Context-driven Analysis**: Search related keywords using `rg` in task directories
+- **DKM Integration**: Load relevant project memory context from `.memory/` directory
+- **Context File Updates**: Update JSON context files during and after task execution
+
+Reference: `/home/fong/Projects/de/public/.claude/commands/fongtask.md` - Complete task management system with context window integration
+
+When triggered, the AI must automatically search for related memory files (`.json`, `.md`) using the provided context/files, then proceed with comparison and synchronization.
+
+## Systematic Alignment Workflow
+
+### Phase 0: Preparation (Think Big, Do Baby Steps)
+- **Review the 5W1H context**: Understand what memory files need alignment, why it's needed, and what outcomes are expected
+- **Apply Quantity & Order principles**: Count the total files needing alignment and prioritize them
+- **Always Double-Check**: Verify you're working with the correct files before making changes
+
+### Phase 1: Discovery & Assessment
+
+#### Step 1: Identify Target Files
+Execute discovery commands to find the oldest files requiring alignment:
+
+```bash
+find ./.memory/ -type f \( -name "*.json" -o -name "*.md" \) \
+-not -path "*/.history/*" \
+-not -path "*/.git/*" \
+-not -path "*/.bak/*" \
+-not -path "*/brain_src/*" \
+-not -path "*/__pycache__/*" \
+-not -path "*/.venv/*" \
+-not -path "*/node_modules/*" \
+-not -name "brain_data.json" \
+-not -name "manifest.json" \
+-printf '%T@ %p\n' | sort -n | head -10
+```
+
+#### Step 2: Initialize Alignment Session
+Create or update the alignment log file: `.memory/alignment-calibration-log.json`
+
+#### Step 3: Priority Assessment
+Categorize files by importance:
+1. **Critical**: Security modules, core data processing, database schemas
+2. **High**: Core modules, API endpoints, essential configurations
+3. **Medium**: Frequently used modules and functions
+4. **Low**: Support modules, rarely used components
+
+### Phase 2: Systematic Verification
+
+#### Step 4: Content Analysis
+- Read current memory file content
+- Identify claimed code references and technical specifications
+- Extract metadata and relationship mappings
+- **Create backup copy of the file before making changes**
+
+#### Step 5: Codebase Verification
+- Locate referenced code files in the actual codebase
+- Compare current implementation with memory documentation
+- Verify function signatures, API endpoints, data structures
+- **Measure twice, cut once**: Double-check before making changes
+
+#### Step 6: Alignment Assessment
+Determine alignment status:
+- **ALIGNED**: Memory accurately reflects current code
+- **OUTDATED**: Memory contains obsolete or incorrect information
+- **MISSING**: No memory exists for important code components
+- **ORPHANED**: Memory references non-existent code
+
+#### Step 7: Corrective Actions
+Based on assessment results:
+- **ALIGNED**: Update metadata with verification timestamp + **Convert to English terminology**
+- **OUTDATED**: Update memory content or delete if irrelevant + **Convert to English terminology**
+- **MISSING**: Create new memory file with current information + **Use English terminology**
+- **ORPHANED**: Remove obsolete memory or redirect to correct references
+- **MANDATORY**: All corrective actions must result in English-language memory content
+
+### Phase 3: Documentation & Logging
+
+#### Step 8: Session Documentation
+Log all alignment activities in the calibration log with timestamps, actions taken, and results achieved.
+
+#### Step 9: Metadata Updates
+Add alignment metadata to processed files:
+
+```json
+{
+  "alignment_metadata": {
+    "last_calibrated": {
+      "timestamp_unix": 1749358572,
+      "timestamp_human": "2025-06-08--11-56-18"
+    },
+    "alignment_status": "ALIGNED",
+    "alignment_result": "Verified against codebase - fully accurate",
+    "calibration_notes": "Content matches current implementation exactly"
+  }
+}
+```
+
+**CRITICAL ALIGNMENT REQUIREMENT**: All alignment metadata fields must use precise English:
+- `alignment_result`: Technical verification outcome in English
+- `calibration_notes`: Detailed technical notes in English  
+- File content: Convert Vietnamese descriptions, notes, tags to English
+- Preserve technical accuracy while ensuring English terminology
+
+#### Step 10: Status Report
+Generate comprehensive alignment session summary including statistics, issues resolved, and recommendations.
+
+## Memory Search and Discovery
+
+### Primary Method: MCP Tool
+Use the MCP search tool for efficient memory discovery:
+
+```
+mcp_DeutschfunsMemorySearch_searchMemoryFiles(keyword="module_name")
+mcp_DeutschfunsMemorySearch_searchMemoryFiles(keyword="function_name")
+mcp_DeutschfunsMemorySearch_searchMemoryFiles(keyword="file_name")
+```
+
+### Task Context Window Integration
+For context window alignment following fongtask.md methodology:
+
+#### Context File Discovery
+```bash
+# Search task context files
+tree /home/fong/Projects/de/public/.fong/docs/0-fong-todo/ -I "*.md" -L 2
+
+# Find specific task context
+rg -i "keyword" /home/fong/Projects/de/public/.fong/docs/0-fong-todo/ --type json
+```
+
+#### Cross-Reference Context with Memory
+1. **Load Task Context**: Read `related-files.json`, `technical-context.json`, `workflow-state.json`
+2. **Query DKM**: Search project memory for related technical knowledge
+3. **Align Findings**: Cross-reference task context with existing memory
+4. **Update Both Systems**: Sync task context and project memory bidirectionally
+
+### Comprehensive Memory Alignment Workflow (Best Practice)
+
+Based on practical implementation experience, follow this systematic approach:
+
+#### Phase 1: Cleanup & Preparation
+```bash
+# 1. Backup files before modification
+cp "source_file.js" "source_file.js-$(date +%Y%m%d-%H%M).bak"
+
+# 2. Code cleanup following project standards
+# Apply jscleanup.md or phpcleanup.md rules
+```
+
+#### Phase 2: Implementation & Logic Documentation
+```bash
+# 1. Identify logic relationships between files
+# Use fonttrace methodology to find dependencies
+rg -i "function_name|class_name" --type js
+
+# 2. Document logic flow and key decisions
+# Focus on WHY not WHAT
+```
+
+#### Phase 3: Metadata Collection & Analysis
+```bash
+# 1. Use specialized readers to extract metadata
+/home/fong/Projects/de/public/.fong/tools/fong-js-reader.sh /absolute/path/file.js
+/home/fong/Projects/de/public/.fong/tools/fong-php-reader.sh /absolute/path/file.php
+
+# 2. Focus on:
+# - Function dependencies
+# - Import/export relationships  
+# - DOM dependencies
+# - Global object usage
+```
+
+#### Phase 4: Memory File Creation
+```bash
+# 1. Create implementation documentation
+.memory/long-term/[feature-name]-implementation.json
+
+# 2. Create metadata relationships
+.memory/file-relationships/[component-name]-metadata.json
+
+# 3. Update alignment log
+.memory/alignment-calibration-log.json
+```
+
+#### Phase 5: Key Insights Capture
+Always document:
+- **Approach Evolution**: Wrong vs Correct approaches
+- **Methodology Used**: Tools and techniques applied
+- **Root Cause Analysis**: Source vs Aftermath fixes
+- **Lessons Learned**: Reusable principles for future implementations
+
+### Additional Keyword Search Strategies
+- **Function-based search**: Search for specific function names and their variants
+- **Module-based search**: Include module prefixes (e.g., "dquiz46", "learndash")
+- **Task-based search**: Use action verbs like "refactor", "bugfix", "implement"
+- **Code pattern search**: Look for distinctive code patterns or unique identifiers
+- **Cross-reference search**: Use keywords found in one memory file to find related ones
+- **Context-driven search**: Use task context files to identify relevant memory areas
+
+### Fallback Method: Terminal Commands
+When MCP tools are unavailable, use terminal-based search:
+
+**PREFERRED**: Use ripgrep (`rg`) for faster searches:
+```bash
+# Find memory related to specific file/module with ripgrep
+rg -i -H "target_file_or_module" ./.memory/ --type json --type md --glob '!*/.history/*'
+
+# Search by keywords with ripgrep
+rg -i -H "function_name_or_distinctive_code" ./.memory/ --type json --type md --glob '!*/.history/*'
+```
+
+**LEGACY**: Use traditional grep only if ripgrep is unavailable:
+```bash
+# Find memory related to specific file/module
+find ./.memory/ -type f \( -name "*.json" -o -name "*.md" \) -not -path "*/.history/*" -exec grep -i -H "target_file_or_module" {} \;
+
+# Search by keywords
+grep -r "function_name_or_distinctive_code" ./.memory/
+```
+
+## Memory Update Standards
+
+### Required Metadata Schema
+Every memory file must contain alignment-relevant metadata:
+
+```json
+{
+  "title": "Descriptive module/function title",
+  "description": "Detailed technical description",
+  "related_files": ["relative/path/to/file1", "relative/path/to/file2"],
+  "created_at": ["2025-01-15--14-30-pm", 1737045000],
+  "updated_at": ["2025-01-15--14-30-pm", 1737045000],
+  "last_accessed": ["2025-01-15--14-30-pm", 1737045000],
+  "last_verified": ["2025-01-15--14-30-pm", 1737045000],
+  "verified_by": "alignment_system",
+  "status": "active | deprecated | planned",
+  "importance": 0.8,
+  "access_count": 5,
+  "tags": ["module", "api", "security", "core"],
+  "version": "1.2.0"
+}
+```
+
+### Critical Information Categories
+Prioritize alignment for:
+- **Core Processing Logic**: Algorithms, business rules, critical workflows
+- **API Specifications**: Endpoint structures, request/response formats, parameters
+- **Data Structures**: Database schemas, JSON formats, object models
+- **System Dependencies**: Module relationships, import/export mappings
+- **Security Implementations**: Authentication, authorization, validation rules
+
+## Alignment Logging System
+
+### Log File Structure: `.memory/alignment-calibration-log.json`
+Maintain comprehensive alignment session logs:
+
+```json
+{
+  "logs": [
+    {
+      "timestamp_unix": 1749358572,
+      "timestamp_human": "2025-06-08--11-56-18",
+      "action": "alignment_session_start",
+      "files_count": 10,
+      "session_id": "align_session_20250608_115618"
+    },
+    {
+      "timestamp_unix": 1749358800,
+      "timestamp_human": "2025-06-08--12-00-00",
+      "action": "file_aligned",
+      "file_path": ".memory/long-term/api-endpoints-reference.json",
+      "status": "ALIGNED",
+      "result": "Verified API endpoints match current implementation"
+    }
+  ],
+  "metadata": {
+    "last_alignment": "2025-06-08--11-56-18",
+    "total_sessions": 15,
+    "files_processed": 150,
+    "alignment_frequency_hours": 48
+  }
+}
+```
+
+## Quality Assurance Guidelines
+
+### Verification Standards
+- **Technical Accuracy**: All code references must point to existing, current implementations
+- **Completeness**: Memory must cover all critical aspects of referenced code
+- **Clarity**: Information must be understandable and actionable
+- **Relevance**: Content must serve current development needs
+
+### File Size Constraints
+- Each JSON memory file must remain under 8000 tokens
+- Split oversized files into focused, related components
+- Maintain clear relationships between split files
+
+### English Language Requirement
+- **ALL memory content must use precise English terminology**
+- **Technical terms must be accurate and standardized**
+- **Avoid colloquialisms or ambiguous language**
+- **CRITICAL**: During alignment process, convert ALL Vietnamese content to precise English
+- **Alignment metadata must use English terminology**: alignment_result, calibration_notes, etc.
+- **File content must be converted to English**: descriptions, notes, technical documentation
+- **Preserve technical accuracy while ensuring English terminology**
+
+### Vietnamese-to-English Translation Guidelines
+- **Technical Accuracy**: Ensure precise translation of technical terms
+- **Consistent Terminology**: Use standardized industry terms
+- **Tags Transformation**: Replace Vietnamese tags with English equivalents while preserving meaning
+- **Context Preservation**: Maintain the technical context during translation
+- **Domain-Specific Vocabulary**: Use appropriate software engineering terminology
+
+## Automated Alignment Procedures
+
+### Timing Guidelines
+- **Alignment Frequency**: Every 48 hours from last significant work session
+- **Batch Processing**: Process 10 files per alignment session for quality assurance
+- **Log Retention**: Maintain 30 most recent alignment logs
+
+### Command Utilities
+
+#### Timestamp Generation
+```bash
+# Unix timestamp
+date +%s
+
+# Human readable format
+date '+%Y-%m-%d--%H-%M-%S'
+
+# Combined output
+echo "$(date +%s) | $(date '+%Y-%m-%d--%H-%M-%S')"
+```
+
+#### Status Monitoring
+```bash
+# Count total memory files
+find ./.memory/ -name "*.json" -o -name "*.md" | wc -l
+
+# Count aligned files with ripgrep (preferred)
+rg -c "alignment_status.*ALIGNED" ./.memory/ --type json
+
+# Count aligned files with traditional grep (fallback)
+grep -r "alignment_status.*ALIGNED" ./.memory/ --include="*.json" | wc -l
+```
+
+## Error Recovery Procedures
+
+### Conflicting Information Resolution
+1. **Code-First Principle**: When conflicts arise, prioritize current codebase over memory
+2. **Version Control**: Maintain change history for significant updates
+3. **Validation Chain**: Cross-reference multiple sources before making changes
+4. **Always Backup**: Create backup copies of files before making significant changes
+
+### Orphaned Memory Handling
+1. **Identification**: Flag memory files referencing non-existent code
+2. **Investigation**: Determine if code moved, renamed, or genuinely removed
+3. **Resolution**: Update references, merge with current files, or remove obsolete content
+
+## Integration with Development Workflow
+
+### Pre-Development Alignment
+Before working on any code module:
+1. Search for existing memory using MCP tools
+2. Verify memory accuracy against current code
+3. Update or create memory as needed
+4. Mark verification timestamp
+
+### Context Window Integration Workflow
+Following `/home/fong/Projects/de/public/.claude/commands/fongtask.md` guidelines:
+
+#### Phase 1: Pre-Task Context Loading
+**MANDATORY**: Before starting any task work:
+
+1. **Read Context Files** using `tree` command:
+```bash
+tree /home/fong/Projects/de/public/.fong/docs/0-fong-todo/[task-name] -I "*.md"
+```
+
+2. **Search Related Keywords** using `rg`:
+```bash
+rg -i "keyword1|keyword2|keyword3" /home/fong/Projects/de/public/.fong/docs/0-fong-todo/[task-name] --type json
+```
+
+3. **Load DKM Context** (Project Memory):
+- Query `.memory/` directory for relevant technical knowledge
+- Cross-reference task context with existing project memory
+- Extract relevant solutions and patterns for current task
+
+#### Phase 2: During Task Execution with Context Alignment
+**Continuous Alignment**: Throughout task execution:
+
+1. **Context-Memory Synchronization**:
+   - Update task context files (`technical-context.json`, `workflow-state.json`)
+   - Cross-check with project memory for consistency
+   - Document new findings in both context files and DKM
+
+2. **File Analysis Integration**:
+   - For PHP files: Use `fong-php-reader.sh` before updating context
+   - For JS files: Use `fong-js-reader.sh` before updating context
+   - Extract technical relationships for both context files and memory alignment
+
+#### Phase 3: Post-Task Context and Memory Alignment
+**MANDATORY**: After task completion:
+
+1. **Final Context Update**:
+   - Update all JSON context files with final state
+   - Document outcomes in `technical-context.json`
+   - Mark completion in `workflow-state.json`
+
+2. **DKM-Context Synchronization**:
+   - Store new knowledge in project memory using discovered context
+   - Align task context findings with long-term project memory
+   - Update memory metadata with context verification timestamps
+
+### Post-Development Synchronization
+After completing code modifications:
+1. Update relevant memory files with changes
+2. Verify all references remain accurate
+3. Add change notes to alignment metadata
+4. Update related file mappings
+5. Follow the "Get It Working First" principle - ensure memory is functional before optimizing
+6. **Context Integration**: Sync task context files with updated memory system
+
+## Success Metrics
+
+### Alignment Quality Indicators
+- **Accuracy Rate**: Percentage of memory files accurately reflecting codebase
+- **Coverage Rate**: Percentage of critical code components documented in memory
+- **Recency Rate**: Percentage of memory files updated within alignment frequency window
+- **Usage Rate**: Frequency of memory file access during development tasks
+
+### Maintenance Efficiency
+- **Time to Alignment**: Average duration for complete alignment session
+- **Issue Resolution Rate**: Percentage of alignment conflicts successfully resolved
+- **Automation Level**: Proportion of alignment tasks completed without manual intervention
+
+This alignment protocol ensures the Deutschfuns LMS memory system remains a reliable, accurate, and efficient knowledge base supporting development activities while maintaining strict quality and consistency standards.
+- **Automation Level**: Proportion of alignment tasks completed without manual intervention
+
+This alignment protocol ensures the Deutschfuns LMS memory system remains a reliable, accurate, and efficient knowledge base supporting development activities while maintaining strict quality and consistency standards.

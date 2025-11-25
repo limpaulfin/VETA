@@ -1,0 +1,321 @@
+# Production Guide: `initialize-learning-progress-template` on lms.deutschfuns.com
+
+## ⚠️ Production Environment - lms.deutschfuns.com ONLY
+
+This guide is **specifically** for the production domain `lms.deutschfuns.com` and the `initialize-learning-progress-template` endpoint that has been whitelisted for production use.
+
+## ⚠️ Prerequisite: Navigate to Project Root
+
+Before running any commands, you **must** be in the project's root directory:
+
+```bash
+cd /home/fong/Projects/de/public/
+```
+
+## What is `initialize-learning-progress-template`?
+
+A comprehensive endpoint that creates a complete learning progress template for all courses in the Deutschfuns LMS:
+
+- Returns hierarchical structure: courses → lessons → topics → quizzes → questions
+- Generates template version with UUID tracking
+- Includes metadata for progress tracking, assignments, and timings
+- **Now available on production**: Through whitelisted endpoint system
+
+## Production Endpoint Access
+
+### ✅ PRODUCTION-READY: curlx.sh with lms.deutschfuns.com
+
+```bash
+# 🎯 PRIMARY: Get full template for all courses
+/home/fong/Projects/de/public/.fong/script-sh/curlx.sh 'curl -s -k "https://lms.deutschfuns.com/?fong-debug-test=initialize-learning-progress-template"'
+
+# 🎯 ALTERNATIVE: Get template with caching enabled
+/home/fong/Projects/de/public/.fong/script-sh/curlx.sh 'curl -s -k "https://lms.deutschfuns.com/?fong-debug-test=initialize-learning-progress-template&use_cache=true"'
+
+# 🎯 TARGETED: Get template for specific courses only
+/home/fong/Projects/de/public/.fong/script-sh/curlx.sh 'curl -s -k "https://lms.deutschfuns.com/?fong-debug-test=initialize-learning-progress-template&course_ids=7702,10456"'
+```
+
+### 🔐 Security & Whitelist System
+
+This endpoint is **whitelisted for production** via:
+- File: `/wp-content/plugins/fong_de_lms/services/fong-initialize-learning-progress-template-endpoint.php`
+- Whitelist filter: `add_filter('fong_debug_allowed_endpoints')`
+- Action: `initialize-learning-progress-template` (approved for production use)
+
+### 📋 Production Response Structure
+
+The production endpoint returns:
+
+```json
+{
+  "test_context": {
+    "description": "Production endpoint for fong_initialize_learning_progress_template helper function. Creates complete learning progress template for all courses.",
+    "test_file": "/var/www/html/wp-content/plugins/fong_de_lms/services/fong-initialize-learning-progress-template-endpoint.php",
+    "action_called": "initialize-learning-progress-template",
+    "timestamp_start": 1754815776.550946,
+    "memory_start_kb": 25399.94
+  },
+  "input_data": {
+    "use_cache": false,
+    "target_course_ids": null
+  },
+  "execution_status": "success",
+  "output_data": {
+    "version": "b02b79ad-4a6e-491f-a283-e03d955f0e2e",
+    "last_updated": 1754815654,
+    "course_ids": [7702, 10456, 27861, 29949],
+    "courses": {
+      "7702": {
+        "is_active": false,
+        "start_time": null,
+        "last_access": null,
+        "end_time": null,
+        "total_progress": 0,
+        "total_completed_lessons": 0,
+        "total_completed_topics": 0,
+        "is_assigned": false,
+        "lesson_ids": [...],
+        "lessons": {
+          "7703": {
+            "progress": 0,
+            "is_assigned": false,
+            "is_current": false,
+            "start_time": null,
+            "last_access": null,
+            "end_time": null,
+            "topic_ids": [...],
+            "topics": {
+              "7712": {
+                "status": "not_started",
+                "is_assigned": false,
+                "is_current": false,
+                "start_time": null,
+                "last_access": null,
+                "end_time": null,
+                "quiz_id": "7714",
+                "quiz_result": {
+                  "status": "not_started",
+                  "is_assigned": false,
+                  "questions": {...}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "error_message": null,
+  "performance": {
+    "time_taken_ms": 889.34,
+    "memory_end_kb": 37268.63,
+    "memory_peak_kb": 40648.55
+  },
+  "footprint": "Updated on 2025-08-10 15:23:45 by Fong Dev Team"
+}
+```
+
+## curlx.sh Production Benefits
+
+- ✅ **Auto SSH proxy** to `fong@192.168.122.1`
+- ✅ **Auto save** to `.fong/_tmp/curl_[timestamp].txt` 
+- ✅ **Clean JSON** output with `-s -k` flags
+- ✅ **Preview** first 10 lines + file info
+- ✅ **Production safe** with whitelisted endpoint
+- ✅ **Large output handling** (3.5MB+ templates supported)
+
+## Smart Reading of Production JSON Output
+
+### Command Line Techniques (80/20 Approach)
+
+```bash
+# 1. Quick overview of template structure (from saved curlx output)
+head -n 50 .fong/_tmp/curl_[timestamp].txt
+
+# 2. Get template version and basic info
+grep -A 10 '"output_data"' .fong/_tmp/curl_[timestamp].txt | head -20
+
+# 3. Find specific course in template
+grep -A 20 '"7702"' .fong/_tmp/curl_[timestamp].txt
+
+# 4. Check course lesson structure
+grep -A 15 '"lesson_ids"' .fong/_tmp/curl_[timestamp].txt
+
+# 5. Find specific lesson template
+grep -A 25 '"7703"' .fong/_tmp/curl_[timestamp].txt
+
+# 6. Check topic structure with quiz info
+grep -A 20 '"topics"' .fong/_tmp/curl_[timestamp].txt | head -50
+
+# 7. Find quiz template data
+grep -A 10 '"quiz_result"' .fong/_tmp/curl_[timestamp].txt
+
+# 8. Check performance metrics
+grep -A 5 '"performance"' .fong/_tmp/curl_[timestamp].txt
+
+# 9. Count total courses in template
+grep -c '"is_active":' .fong/_tmp/curl_[timestamp].txt
+
+# 10. Extract all course IDs from template
+grep '"course_ids"' .fong/_tmp/curl_[timestamp].txt
+```
+
+## Production vs Development Comparison
+
+| Aspect | Development (tiengduc2fong.com) | Production (lms.deutschfuns.com) |
+|--------|--------------------------------|-----------------------------------|
+| **Domain** | tiengduc2fong.com | **lms.deutschfuns.com** |
+| **Endpoint** | Unit-test based (DEPRECATED) | **Production whitelisted** |
+| **Security** | Development only | **Multi-environment approved** |
+| **File access** | `/fong-unit-tests/` | **`/services/`** |
+| **Performance** | Full debug info | **Optimized for production** |
+| **Cache support** | Available | **Available with use_cache param** |
+
+## Example Production Usage Scenarios
+
+### 1. Generate Complete Learning Template
+```bash
+# Get full template for system initialization
+/home/fong/Projects/de/public/.fong/script-sh/curlx.sh 'curl -s -k "https://lms.deutschfuns.com/?fong-debug-test=initialize-learning-progress-template"'
+
+# Analyze template version and courses
+grep -A 5 '"version"' .fong/_tmp/curl_[latest].txt
+grep '"course_ids"' .fong/_tmp/curl_[latest].txt
+```
+
+### 2. Template for Specific Courses Only
+```bash
+# Generate template for specific courses (performance optimization)
+/home/fong/Projects/de/public/.fong/script-sh/curlx.sh 'curl -s -k "https://lms.deutschfuns.com/?fong-debug-test=initialize-learning-progress-template&course_ids=7702,10456"'
+
+# Check filtered course structure
+grep -A 10 '"course_ids"' .fong/_tmp/curl_[latest].txt
+```
+
+### 3. Cached Template Retrieval
+```bash
+# Get cached version for better performance
+/home/fong/Projects/de/public/.fong/script-sh/curlx.sh 'curl -s -k "https://lms.deutschfuns.com/?fong-debug-test=initialize-learning-progress-template&use_cache=true"'
+
+# Check cache status and performance
+grep -A 5 '"performance"' .fong/_tmp/curl_[latest].txt
+```
+
+## Template Structure Overview
+
+```
+learning_progress_template = {
+    'version': 'UUID',                    // Template version identifier
+    'last_updated': timestamp,            // Generation timestamp
+    'course_ids': [7702, 10456, ...],    // All available course IDs
+    'courses': {
+        '7702': {                         // Course ID as key
+            'is_active': false,           // Default inactive state
+            'is_assigned': false,         // Default unassigned
+            'total_progress': 0,          // Default progress
+            'lesson_ids': [...],          // All lesson IDs in course
+            'lessons': {
+                '7703': {                 // Lesson ID as key
+                    'progress': 0,        // Default lesson progress
+                    'is_assigned': false, // Default unassigned
+                    'is_current': false,  // Default not current
+                    'topic_ids': [...],   // All topic IDs in lesson
+                    'topics': {
+                        '7712': {         // Topic ID as key
+                            'status': 'not_started',
+                            'is_assigned': false,
+                            'is_current': false,
+                            'quiz_id': '7714',
+                            'quiz_result': {
+                                'status': 'not_started',
+                                'questions': {
+                                    '8978': {  // Question ID
+                                        'is_correct': null,
+                                        'answer': '',
+                                        'attempts_data': []
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+## Key Production Indicators
+
+- `execution_status`: "success" or "error"
+- `output_data.version`: UUID for template versioning
+- `output_data.course_ids`: Array of all available courses
+- `output_data.courses`: Complete hierarchical structure
+- `performance.time_taken_ms`: Generation time (typically 800-1000ms)
+- `performance.memory_peak_kb`: Peak memory usage (typically 40MB+)
+
+## Production Safety & Best Practices
+
+1. **Whitelist approved**: Endpoint explicitly allowed on production
+2. **No file writes**: Only JSON response, no server file creation
+3. **Performance optimized**: Supports caching and targeted course selection
+4. **Memory efficient**: Handles large templates (3.5MB+) safely
+5. **Error handling**: Graceful failure with detailed messages
+6. **Auto-save**: curlx.sh saves results locally for analysis
+7. **Version tracking**: UUID-based template versioning
+
+## Troubleshooting Production Issues
+
+### Common Error Patterns
+
+```bash
+# Check for execution errors
+grep '"execution_status": "error"' .fong/_tmp/curl_[latest].txt
+
+# Check template generation success
+grep '"version"' .fong/_tmp/curl_[latest].txt
+
+# Verify course data structure
+grep -c '"courses"' .fong/_tmp/curl_[latest].txt
+
+# Check performance metrics for issues
+grep -A 5 '"performance"' .fong/_tmp/curl_[latest].txt
+```
+
+### Performance Optimization
+
+1. **Use caching**: Add `&use_cache=true` for repeated calls
+2. **Target specific courses**: Use `&course_ids=ID1,ID2` for subset templates
+3. **Monitor memory**: Check `memory_peak_kb` in performance metrics
+4. **Check timing**: Monitor `time_taken_ms` for performance regression
+
+## Deprecated Unit Test File
+
+### ❌ DEPRECATED FILE (DO NOT USE):
+```
+/wp-content/plugins/fong_de_lms/fong-unit-tests/test-initialize-learning-progress-template.php
+```
+
+**Status**: File contains `return;` statement to prevent execution
+**Migration date**: 2025-08-10
+**Reason**: Migrated to production-ready endpoint with whitelist support
+
+### ✅ USE INSTEAD:
+```
+/wp-content/plugins/fong_de_lms/services/fong-initialize-learning-progress-template-endpoint.php
+```
+
+## Related Files & Documentation
+
+- **Active endpoint**: `/wp-content/plugins/fong_de_lms/services/fong-initialize-learning-progress-template-endpoint.php`
+- **Deprecated file**: `/wp-content/plugins/fong_de_lms/fong-unit-tests/test-initialize-learning-progress-template.php`
+- **Helper function**: `/wp-content/plugins/fong_de_lms/modules/learndash-middleware/src/helpers/fong_initialize_learning_progress_template-helper.php`
+- **Production blueprint**: `/home/fong/Projects/de/public/.fong/instructions/instructionsX-endpointx-staging-production-allow.md`
+
+---
+
+**Generated**: 2025-08-10 by Fong Dev Team  
+**Environment**: Production (lms.deutschfuns.com)  
+**Status**: Active & Whitelisted  
+**Version**: 1.0.0

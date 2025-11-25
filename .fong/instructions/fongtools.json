@@ -1,0 +1,466 @@
+{
+  "version": "3.1.0",
+  "updated": "2025-10-28",
+  "description": "Comprehensive tool catalog - MCP servers with core fallback and instruction files",
+
+  "mcp_servers": [
+    {
+      "name": "DE-MCP Hub - Multi-purpose MCP Server",
+      "mcp_namespace": "de-MCP",
+      "mcp_path": "/home/fong/Projects/de/de-MCPs",
+      "mcp_endpoint": "node /home/fong/Projects/de/de-MCPs/dist/index.js",
+      "core_fallback": null,
+      "description": "Comprehensive MCP server with 11 tools for file search, shell execution, memory search, internet research, and database queries",
+      "tools": [
+        {
+          "name": "rg.search",
+          "description": "Fallback ripgrep search across allowed directories (primary CLI: smart-search-fz-rg-bm25)"
+        },
+        {
+          "name": "shell.exec",
+          "description": "Execute allowed shell commands with security restrictions"
+        },
+        {
+          "name": "python.run",
+          "description": "Run Python scripts from allowed directory"
+        },
+        {
+          "name": "net.http",
+          "description": "Make HTTP requests (GET/POST) for web scraping or API calls"
+        },
+        {
+          "name": "hub.info",
+          "description": "Get information about all available tools in the hub"
+        },
+        {
+          "name": "memory.search",
+          "description": "Search memory files (.fong/.memory/) using keywords with auto path detection"
+        },
+        {
+          "name": "internet.search",
+          "description": "Internet search powered by Perplexity AI for latest knowledge"
+        },
+        {
+          "name": "de_rag.query",
+          "description": "Query de-RAG system for technical knowledge from 28 programming books (PHP, WordPress, Clean Code, Design Patterns)"
+        },
+        {
+          "name": "js_file.read",
+          "description": "Read and analyze JavaScript/TypeScript files with syntax and dependency analysis"
+        },
+        {
+          "name": "php_file.read",
+          "description": "Read and analyze PHP files with class, method, and WordPress hook analysis"
+        },
+        {
+          "name": "wp_db.query",
+          "description": "WordPress Database Query (SELECT only) with security validation and SSL support"
+        }
+      ]
+    },
+    {
+      "name": "DKM Knowledge Base - Multi-RAG & Research System",
+      "mcp_namespace": "dkm-knowledgebase",
+      "mcp_path": "/home/fong/Projects/mini-rag/dkm-knowledgebase-mcp",
+      "mcp_endpoint": "node /home/fong/Projects/mini-rag/dkm-knowledgebase-mcp/dist/index.js",
+      "core_fallback": null,
+      "description": "Expert Decision Support System with hundreds of programming books + Academic research + Perplexity AI - USE 80-90% OF TIME for queries",
+      "tools": [
+        {
+          "name": "queryNewRAG",
+          "description": "NewRAG Multi-Query with hash-based filtering - Query hundreds of programming books (max 9 sources, max 3 queries) - FIRST PRIORITY for book knowledge",
+          "critical_workflow": [
+            "1. Run standalone script: /home/fong/Projects/mini-rag/multi-query/run-multiquery.sh --list-pdfs",
+            "2. Analyze which 5-9 books are relevant (think deep, don't auto-filter)",
+            "3. Copy FULL 32-char MD5 hash IDs",
+            "4. Query with 2-4 keywords per query (simple, focused)",
+            "5. Query BEFORE-DURING task execution (not just once)"
+          ],
+          "query_strategy": "SHORT (2-4 keywords), FREQUENTLY (throughout task), BEFORE+DURING execution",
+          "anti_patterns": [
+            "❌ Query once at start, never again",
+            "❌ Complex nested logical queries",
+            "❌ Wait until stuck to query",
+            "❌ Query all books at once (>2min)"
+          ]
+        },
+        {
+          "name": "queryRAG",
+          "description": "QueryRAG Super RAG/General - Query across all RAG collections with top_k control - Use for broad searches across multiple book collections"
+        },
+        {
+          "name": "queryPerplexity",
+          "description": "Perplexity AI with structured queries (role + context + instructions) - Latest practices and internet research"
+        },
+        {
+          "name": "queryArXiv",
+          "description": "ArXiv academic paper search - Research-grade knowledge for specialized topics"
+        },
+        {
+          "name": "list-collections",
+          "description": "List all available RAG collections and their book counts"
+        }
+      ],
+      "usage_philosophy": "Treat books as expert consultants available 24/7 - Query 80-90% of development time - 3-7+ queries per task is NORMAL"
+    },
+    {
+      "name": "Context7 Library Documentation",
+      "mcp_namespace": "context7",
+      "mcp_path": "npx -y @context7/mcp-server@latest",
+      "mcp_endpoint": "npx -y @context7/mcp-server@latest",
+      "core_fallback": null,
+      "description": "Up-to-date library/framework documentation - ALWAYS USE FIRST when working with ANY external library",
+      "tools": [
+        {
+          "name": "resolve-library-id",
+          "description": "Resolve library name to Context7 compatible ID (e.g., 'react' → '/facebook/react')"
+        },
+        {
+          "name": "get-library-docs",
+          "description": "Get comprehensive documentation for a library by ID and optional topic"
+        }
+      ],
+      "workflow": [
+        "1. Resolve library ID: mcp__context7__resolve-library-id(libraryName: 'react')",
+        "2. Get docs: mcp__context7__get-library-docs(context7CompatibleLibraryID: '/facebook/react', topic: 'hooks')",
+        "3. Apply docs to coding task"
+      ],
+      "critical_rule": "⚠️ ALWAYS use Context7 BEFORE writing code with external libraries"
+    },
+    {
+      "name": "Safe Calculation Math Engine",
+      "mcp_namespace": "safe-calculation",
+      "mcp_path": "/home/fong/Projects/safe-calculation-mcp",
+      "mcp_endpoint": "node /home/fong/Projects/safe-calculation-mcp/dist/index.js",
+      "core_fallback": null,
+      "description": "Secure mathematical calculations - NEVER calculate mentally, ALWAYS use this tool (even for 2+2)",
+      "tools": [
+        {
+          "name": "calculate",
+          "description": "Perform mathematical calculations with 26 operations: count, eval, uuid, random, stats, sum, avg, min, max, median, mode, range, variance, std_dev, percentile, factorial, fibonacci, prime_check, gcd, lcm, power, sqrt, absolute, round, ceil, floor, truncate",
+          "operations": "count|eval|uuid|random|stats|sum|avg|min|max|median|mode|range|variance|std_dev|percentile|factorial|fibonacci|prime_check|gcd|lcm|power|sqrt|absolute|round|ceil|floor|truncate"
+        }
+      ],
+      "critical_rule": "🚨 NEVER PERFORM MENTAL ARITHMETIC - AI WILL ERR IN CALCULATIONS - Use for ALL math (2+2 → calculus) + counting (tasks, items, users, files, rows, arrays)"
+    },
+    {
+      "name": "Notion Workspace Integration",
+      "mcp_namespace": "Notion",
+      "mcp_path": "/home/fong/Projects/notion-mcp",
+      "mcp_endpoint": "node /home/fong/Projects/notion-mcp/dist/index.js",
+      "core_fallback": "curl",
+      "description": "Notion workspace search and CRUD operations - Project-specific knowledge base",
+      "tools": [
+        {
+          "name": "notion-search",
+          "description": "Search across Notion workspace for pages, databases, and content"
+        },
+        {
+          "name": "notion-create",
+          "description": "Create new pages and database entries in Notion"
+        },
+        {
+          "name": "notion-read",
+          "description": "Read page content and database entries"
+        },
+        {
+          "name": "notion-update",
+          "description": "Update existing pages and database entries"
+        },
+        {
+          "name": "notion-delete",
+          "description": "Archive/delete pages and database entries"
+        }
+      ],
+      "fallback_instructions": ".fong/instructions/fongnotion.md (curl-based API calls)"
+    },
+    {
+      "name": "Mem0 AI Memory Management (ts-mem0-mcp)",
+      "mcp_namespace": "ts-mem0-mcp",
+      "mcp_path": "/home/fong/Projects/ts-mem0-mcp",
+      "mcp_endpoint": "node /home/fong/Projects/ts-mem0-mcp/dist/index.js",
+      "core_fallback": "curl",
+      "description": "Persistent AI memory management with CRUD operations, semantic search, and cross-session context preservation - USE VERY FREQUENTLY",
+      "tools": [
+        {
+          "name": "searchMemories",
+          "description": "Semantic search across memory entries by query text"
+        },
+        {
+          "name": "getMemory",
+          "description": "Get specific memory by ID"
+        },
+        {
+          "name": "getAllMemories",
+          "description": "Get all memories for a user"
+        },
+        {
+          "name": "addMemory",
+          "description": "Add new memory entry"
+        },
+        {
+          "name": "updateMemory",
+          "description": "Update existing memory entry"
+        },
+        {
+          "name": "deleteMemory",
+          "description": "Delete memory entry"
+        },
+        {
+          "name": "getMemoryHistory",
+          "description": "Get history of memory changes"
+        }
+      ],
+      "default_user": "deutschfuns-wp",
+      "fallback_instructions": ".fong/instructions/instructions-mem0.md (curl-based API calls)",
+      "critical_rule": "⚠️ MANDATORY - Use VERY FREQUENTLY for memory alignment (BEFORE-DURING-AFTER task execution)"
+    },
+    {
+      "name": "Python File Analyzer (ts-py-reader-mcp)",
+      "mcp_namespace": "ts-py-reader",
+      "mcp_path": "/home/fong/Projects/ts-py-reader-mcp",
+      "mcp_endpoint": "node /home/fong/Projects/ts-py-reader-mcp/dist/index.js",
+      "core_fallback": "ts-py-reader",
+      "description": "Python file analyzer with dependency tracking, code structure analysis, and call graph generation - MANDATORY before editing Python files"
+    },
+    {
+      "name": "PHP File Analyzer (ts-php-reader-mcp)",
+      "mcp_namespace": "ts-php-reader",
+      "mcp_path": "/home/fong/Projects/ts-php-reader-mcp",
+      "mcp_endpoint": "node /home/fong/Projects/ts-php-reader-mcp/dist/index.js",
+      "core_fallback": "ts-php-reader",
+      "description": "PHP file analyzer with dependency tracking, namespace analysis, and class structure parsing - MANDATORY before editing PHP files"
+    },
+    {
+      "name": "TypeScript/JavaScript File Analyzer (ts-ts-js-reader-mcp)",
+      "mcp_namespace": "ts-ts-js-reader",
+      "mcp_path": "/home/fong/Projects/ts-ts-js-reader-mcp",
+      "mcp_endpoint": "node /home/fong/Projects/ts-ts-js-reader-mcp/dist/index.js",
+      "core_fallback": "ts-ts-js-reader",
+      "description": "TypeScript/JavaScript file analyzer with dependency tracking, import/export analysis, and React component detection - MANDATORY before editing TS/JS files"
+    },
+    {
+      "name": "Git History Search (ts-tuc-mang-minh-mcp)",
+      "mcp_namespace": "ts-tuc-mang-minh",
+      "mcp_path": "/home/fong/Projects/ts-tuc-mang-minh-mcp",
+      "mcp_endpoint": "node /home/fong/Projects/ts-tuc-mang-minh-mcp/dist/index.js",
+      "core_fallback": "ts-tuc-mang-minh",
+      "description": "Git commit history and VSCode/Cursor local history search with file-specific tracking"
+    },
+    {
+      "name": "Autochrome Browser Automation",
+      "mcp_namespace": "autochrome",
+      "mcp_path": "/home/fong/Projects/autochrome-mcp",
+      "mcp_endpoint": "node /home/fong/Projects/autochrome-mcp/dist/index.js",
+      "core_fallback": null,
+      "description": "Browser automation with Chrome DevTools Protocol - Web scraping, automation, testing",
+      "tools": [
+        {
+          "name": "browser-navigate",
+          "description": "Navigate to URL and control browser"
+        },
+        {
+          "name": "browser-screenshot",
+          "description": "Take screenshots of web pages"
+        },
+        {
+          "name": "browser-execute",
+          "description": "Execute JavaScript in browser context"
+        }
+      ],
+      "fallback_instructions": ".fong/instructions/instructions-autochrome.md"
+    }
+  ],
+
+  "instructions": [
+    {
+      "name": "Init Prompt - MANDATORY execution workflow",
+      "file": ".fong/instructions/init-prompt.json",
+      "priority": "CRITICAL",
+      "description": "⚠️ MUST READ FIRST - Core principles, MCP priority, DKM NewRAG workflow, memory alignment"
+    },
+    {
+      "name": "Fong Tools - Tool catalog and selector",
+      "file": ".fong/instructions/fongtools.json",
+      "priority": "CRITICAL",
+      "description": "This file - Complete catalog of MCPs and instruction files"
+    },
+    {
+      "name": "DKM Sources Knowledge Base - Complete knowledge map",
+      "file": ".fong/instructions/instructions-dkm-sources-knowledgebase.md",
+      "priority": "HIGH",
+      "description": "Complete map of all knowledge sources (Context7, NewRAG, Perplexity, ArXiv, Notion) with query strategies - MUST READ for research tasks"
+    },
+    {
+      "name": "Mem0 Memory System - Persistent memory management",
+      "file": ".fong/instructions/instructions-mem0.md",
+      "priority": "HIGH",
+      "description": "Persistent memory management with CRUD operations - Use VERY FREQUENTLY"
+    },
+    {
+      "name": "MCP Safe Calculation Math Engine",
+      "file": ".fong/instructions/instructions-mcp-safe-calculation-math-engine.md",
+      "priority": "HIGH",
+      "description": "Secure mathematical calculations via MCP - NEVER calculate mentally"
+    },
+    {
+      "name": "Notion API CRUD - Workspace integration",
+      "file": ".fong/instructions/fongnotion.md",
+      "priority": "MEDIUM",
+      "description": "Complete curl-based Notion workspace integration with fallback"
+    },
+    {
+      "name": "Perplexity AI Research - PhD-level research",
+      "file": ".fong/instructions/fongperplexicity.md",
+      "priority": "MEDIUM",
+      "description": "PhD-level research with THINK ULTRA methodology"
+    },
+    {
+      "name": "arXiv Query System - Academic papers",
+      "file": ".fong/instructions/instructions-proper-arxiv-searcher.md",
+      "priority": "MEDIUM",
+      "description": "Academic paper search and analysis"
+    },
+    {
+      "name": "Autochrome MCP - Browser automation",
+      "file": ".fong/instructions/instructions-autochrome.md",
+      "priority": "MEDIUM",
+      "description": "Browser automation and web scraping with Chrome DevTools Protocol"
+    },
+    {
+      "name": "CRUD Obsidian Notes - Knowledge base",
+      "file": ".fong/instructions/instructions-CRUD-obsidian-notes.md",
+      "priority": "LOW",
+      "description": "Obsidian knowledge base management"
+    },
+    {
+      "name": "Push/Pull Boiler-plate - Sync instructions",
+      "file": ".fong/instructions/instructions-push-pull-boiler-plate.md",
+      "priority": "LOW",
+      "description": "Sync instructions across projects"
+    },
+    {
+      "name": "Smart Search CLI - Hybrid file search",
+      "file": ".fong/instructions/smartsearch.md",
+      "priority": "HIGH",
+      "description": "Primary fuzzy+BM25 code search CLI (fallback to ripgrep)"
+    },
+    {
+      "name": "Read Long File - Large file processing",
+      "file": ".fong/instructions/instructions-read-long-file.md",
+      "priority": "LOW",
+      "description": "Large file processing strategies with sed/awk sliding window"
+    },
+    {
+      "name": "Autodebug Notebook - Jupyter debugging",
+      "file": ".fong/instructions/instructions-autodebug-notebook.md",
+      "priority": "LOW",
+      "description": "Jupyter notebook debugging automation"
+    },
+    {
+      "name": "Autodebug Python - Python debugging",
+      "file": ".fong/instructions/instructions-autodebug-python.md",
+      "priority": "LOW",
+      "description": "Python script debugging automation"
+    },
+    {
+      "name": "Paper Analysis Clone Process - Academic workflow",
+      "file": ".fong/instructions/instructions-paper-analysis-clone-process.md",
+      "priority": "LOW",
+      "description": "Academic paper analysis workflow"
+    },
+    {
+      "name": "Read Image PhD-level Chart Analysis",
+      "file": ".fong/instructions/instructions-read-image-phd-level-chart-analysis-framework.md",
+      "priority": "LOW",
+      "description": "Image and chart interpretation with PhD-level analysis"
+    },
+    {
+      "name": "Tuc Mang Minh - Git history search",
+      "file": ".fong/instructions/instructions-tuc-mang-minh.md",
+      "priority": "LOW",
+      "description": "Git history search and file tracking"
+    },
+    {
+      "name": "Notebook Creator - Jupyter management",
+      "file": ".fong/instructions/instructions-notebook-ipynb-creator.md",
+      "priority": "LOW",
+      "description": "Jupyter notebook creation and management"
+    },
+    {
+      "name": "RAG Kali Security Books",
+      "file": ".fong/instructions/instructions-RAG-kali-security-books.md",
+      "priority": "LOW",
+      "description": "Security documentation queries"
+    },
+    {
+      "name": "RAG Python Clean Code Books",
+      "file": ".fong/instructions/instructions-RAG-python-clean-code-books.md",
+      "priority": "LOW",
+      "description": "Python best practices from programming books"
+    },
+    {
+      "name": "Textor Doc Converter - Mermaid + PlantUML",
+      "file": ".fong/instructions/instructions-textor-doc-converter-mermaid-plantuml.md",
+      "priority": "LOW",
+      "description": "Document converter with PlantUML + Mermaid support (Complete Guide)"
+    },
+    {
+      "name": "PDF Naming Convention Rename",
+      "file": ".fong/instructions/instructions-pdf-naming-convention-rename.md",
+      "priority": "LOW",
+      "description": "Standardize PDF filenames with author-year-title convention"
+    },
+    {
+      "name": "Fong Memory - Memory operations",
+      "file": ".fong/instructions/fongmemory.md",
+      "priority": "MEDIUM",
+      "description": "Memory operations and search across .fong/.memory/"
+    },
+    {
+      "name": "Fong Task - Asana integration",
+      "file": ".fong/instructions/fongtask.md",
+      "priority": "MEDIUM",
+      "description": "Task management with Asana integration"
+    },
+    {
+      "name": "Fong Asana - Project management",
+      "file": ".fong/instructions/fongasana.md",
+      "priority": "MEDIUM",
+      "description": "Asana project management integration"
+    },
+    {
+      "name": "Fong Trace - Code tracing",
+      "file": ".fong/instructions/fongtrace.md",
+      "priority": "LOW",
+      "description": "Code tracing and debugging workflows"
+    }
+  ],
+
+  "usage_priority": {
+    "description": "Tool usage priority order from init-prompt.json",
+    "order": [
+      "1. Context7 - ALWAYS FIRST for ANY external library/framework",
+      "2. DKM NewRAG - FIRST PRIORITY for book knowledge (80-90% of time, 3-7+ queries per task)",
+      "3. Safe Calculation - NEVER calculate mentally, ALWAYS use for ALL math/counting",
+      "4. mem0 - Use VERY FREQUENTLY for memory alignment (before-during-after)",
+      "5. Perplexity AI - Latest practices and internet research",
+      "6. ArXiv - Academic research for specialized topics",
+      "7. Notion - Project-specific knowledge",
+      "8. File Analyzers - MANDATORY before editing code (PHP/JS/TS/Python)",
+      "9. DE-MCP tools - For file search, shell exec, database queries",
+      "10. Autochrome - Browser automation when needed"
+    ]
+  },
+
+  "critical_rules": [
+    "⚠️ ALWAYS read init-prompt.json FIRST - Contains core principles and workflows",
+    "⚠️ ALWAYS use Context7 BEFORE coding with ANY external library",
+    "⚠️ ALWAYS use DKM NewRAG 80-90% of time - Query SHORT (2-4 keywords), FREQUENTLY (throughout task)",
+    "⚠️ NEVER calculate mentally - ALWAYS use safe-calculation MCP (even for 2+2)",
+    "⚠️ ALWAYS use mem0 MCP VERY FREQUENTLY for memory CRUD (before-during-after task execution)",
+    "⚠️ ALWAYS use file analyzers (PHP/JS/TS/Python) BEFORE editing code files",
+    "⚠️ ALWAYS use `smart-search-fz-rg-bm25` for search (fallback: `rg`, NOT grep)",
+    "⚠️ ALWAYS use `tree` for directory listing (NOT ls)"
+  ]
+}

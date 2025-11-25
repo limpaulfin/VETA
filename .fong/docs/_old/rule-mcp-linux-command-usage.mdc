@@ -1,0 +1,311 @@
+# Quy Tắc Sử Dụng MCP Linux Command Executor
+
+*Mod by Fong on 2025-07-24--12-16-PM*
+*Mod by Fong on 2025-07-24--12-20-PM*
+
+## Mục Đích
+
+Quy tắc này hướng dẫn chi tiết khi nào nên sử dụng MCP Linux Command Executor và khi nào không, dựa trên phân tích codebase và bài học kinh nghiệm từ dự án.
+
+## Phân Tích MCP Linux Command Executor
+
+### Cấu Trúc và Tính Năng
+- **Tool chính**: `mcp_fong-linux-command-executor_runLinuxCommand`
+- **Mô tả**: Thực thi lệnh Linux không-sudo và lưu output vào log file
+- **Yêu cầu bắt buộc**: `working_directory` parameter (đường dẫn tuyệt đối)
+- **Hạn chế**: Chỉ hỗ trợ lệnh không-sudo
+
+### Danh Sách Lệnh Bị Chặn (deny_list.json)
+```json
+[
+  "rm",
+  "mv"
+]
+```
+
+### Đặc Điểm Kỹ Thuật
+- **Logging**: Tự động lưu output vào `/home/fong/Projects/MCPs/fong_linux_command_executor/logc/`
+- **Truncation**: Output >300 dòng sẽ bị cắt, chỉ hiển thị 300 dòng cuối
+- **Error Handling**: Xử lý lỗi chi tiết với status codes
+- **Security**: Kiểm tra deny list trước khi thực thi
+
+## Khi Nào DÙNG MCP Linux Command Executor
+
+### ✅ Nên Dùng Cho
+
+1. **Lệnh thông tin và kiểm tra**:
+   ```bash
+   # File system exploration - ƯU TIÊN dùng tree thay vì ls
+   tree -L 3 /path/to/directory
+   tree -p /path/to/directory  # Hiển thị permissions
+   tree -a /path/to/directory  # Bao gồm hidden files
+   
+   # Chỉ dùng ls khi cần thông tin chi tiết cụ thể
+   ls -la /path/to/directory
+   find /path -name "*.txt"
+   
+   # System information
+   pwd
+   whoami
+   date
+   uname -a
+   ```
+
+2. **Lệnh đọc và phân tích**:
+   ```bash
+   # File reading
+   head -20 /path/to/file
+   tail -10 /path/to/file
+   wc -l /path/to/file
+   
+   # Content analysis
+   grep -n "pattern" /path/to/file
+   sed -n '1,50p' /path/to/file
+   awk '{print $1}' /path/to/file
+   ```
+
+3. **Lệnh tìm kiếm và lọc**:
+   ```bash
+   # Search operations
+   grep -r "keyword" /path/to/directory
+   find /path -type f -name "*.py"
+   locate filename
+   ```
+
+4. **Lệnh kiểm tra trạng thái**:
+   ```bash
+   # Status checks
+   ps aux | grep process_name
+   df -h
+   free -h
+   systemctl status service_name
+   ```
+
+5. **Lệnh network và web**:
+   ```bash
+   # Network operations
+   curl -I https://example.com
+   ping -c 3 google.com
+   wget --spider https://example.com
+   ```
+
+### ❌ KHÔNG Dùng Cho
+
+1. **Git Commands** (BẮT BUỘC):
+   ```bash
+   # ❌ KHÔNG dùng MCP cho:
+   git add .
+   git commit -m "message"
+   git push origin main
+   git status
+   git log
+   
+   # ✅ Dùng run_terminal_cmd thay vì MCP
+   ```
+
+2. **Lệnh có sudo**:
+   ```bash
+   # ❌ KHÔNG dùng MCP cho:
+   sudo apt update
+   sudo systemctl restart service
+   sudo chmod 755 file
+   ```
+
+3. **Lệnh nguy hiểm** (đã bị chặn):
+   ```bash
+   # ❌ Bị chặn trong deny_list.json:
+   rm -rf /path/to/directory
+   mv /path/to/file /new/location
+   ```
+
+4. **Lệnh tương tác**:
+   ```bash
+   # ❌ KHÔNG dùng MCP cho:
+   nano /path/to/file
+   vim /path/to/file
+   less /path/to/file
+   ```
+
+5. **Lệnh cần authentication**:
+   ```bash
+   # ❌ KHÔNG dùng MCP cho:
+   ssh user@host
+   scp file user@host:/path
+   rsync -avz /source/ user@host:/dest/
+   ```
+
+## Quy Trình Lựa Chọn Tool
+
+### Bước 1: Phân Loại Lệnh
+```bash
+# Kiểm tra loại lệnh
+if [[ $command == git* ]]; then
+    echo "Git command -> Dùng run_terminal_cmd"
+elif [[ $command == sudo* ]]; then
+    echo "Sudo command -> Dùng system terminal"
+elif [[ $command =~ ^(rm|mv)$ ]]; then
+    echo "Dangerous command -> Bị chặn"
+else
+    echo "Safe command -> Có thể dùng MCP"
+fi
+```
+
+### Bước 2: Kiểm Tra Yêu Cầu
+- **working_directory**: MCP yêu cầu đường dẫn tuyệt đối
+- **Authentication**: Lệnh cần auth không dùng MCP
+- **Interactive**: Lệnh tương tác không dùng MCP
+
+### Bước 3: Chọn Tool Phù Hợp
+1. **Git commands**: `run_terminal_cmd`
+2. **Sudo commands**: System terminal
+3. **Safe commands**: `mcp_fong-linux-command-executor_runLinuxCommand`
+4. **File operations**: `mcp_fong-long-file-reader_readFileWithCommands`
+
+## Best Practices
+
+### 1. Luôn Kiểm Tra Trước
+```bash
+# Kiểm tra file tồn tại trước khi đọc
+if [ -f "/path/to/file" ]; then
+    # Dùng MCP để đọc
+else
+    # Báo lỗi
+fi
+```
+
+### 2. Sử Dụng Đường Dẫn Tuyệt Đối
+```bash
+# ✅ Đúng
+working_directory: "/home/fong/Projects/my-project"
+
+# ❌ Sai
+working_directory: "./my-project"
+```
+
+### 3. Ưu Tiên Tree Thay Vì Ls
+```bash
+# ✅ Ưu tiên dùng tree
+tree -L 2 /path/to/directory
+tree -p /path/to/directory  # Hiển thị permissions
+tree -a /path/to/directory  # Bao gồm hidden files
+
+# ❌ Chỉ dùng ls khi cần thông tin chi tiết cụ thể
+ls -la /path/to/directory
+ls -lh /path/to/directory  # Human readable sizes
+```
+
+### 4. Xử Lý Output Dài
+```bash
+# MCP tự động truncate output >300 dòng
+# Kiểm tra output_note để biết có bị cắt không
+```
+
+### 5. Error Handling
+```bash
+# Luôn kiểm tra status trong response
+if response["status"] == "success":
+    # Xử lý output
+else:
+    # Xử lý lỗi
+```
+
+## Ví Dụ Thực Tế
+
+### ✅ Ví Dụ Đúng
+```python
+# File system exploration - ƯU TIÊN tree
+mcp_fong-linux-command-executor_runLinuxCommand(
+    command="tree -L 2 /home/fong/Projects",
+    working_directory="/home/fong/Projects"
+)
+
+# Tree với permissions
+mcp_fong-linux-command-executor_runLinuxCommand(
+    command="tree -p -L 1 /home/fong/Projects",
+    working_directory="/home/fong/Projects"
+)
+
+# Content analysis
+mcp_fong-linux-command-executor_runLinuxCommand(
+    command="grep -n 'function' /path/to/file.js",
+    working_directory="/home/fong/Projects"
+)
+```
+
+### ❌ Ví Dụ Sai
+```python
+# Git commands - KHÔNG dùng MCP
+run_terminal_cmd("git add . && git commit -m 'update'")
+
+# Sudo commands - KHÔNG dùng MCP
+# Dùng system terminal trực tiếp
+
+# Dangerous commands - Bị chặn
+# rm, mv commands sẽ bị từ chối
+```
+
+## Troubleshooting
+
+### Lỗi Thường Gặp
+
+1. **Working directory không tồn tại**:
+   ```
+   Error: Working directory '/invalid/path' does not exist
+   Solution: Kiểm tra đường dẫn và dùng đường dẫn tuyệt đối
+   ```
+
+2. **Command bị chặn**:
+   ```
+   Error: Command 'rm' is on the deny list and was blocked
+   Solution: Dùng lệnh thay thế hoặc system terminal
+   ```
+
+3. **Output bị truncate**:
+   ```
+   Output is truncated to the last 300 lines
+   Solution: Kiểm tra log file để xem output đầy đủ
+   ```
+
+### Debug Commands
+```bash
+# Kiểm tra MCP status
+echo "MCP Linux Command Executor Status: OK"
+
+# Test basic command
+mcp_fong-linux-command-executor_runLinuxCommand(
+    command="pwd",
+    working_directory="/home/fong"
+)
+```
+
+## Tóm Tắt Quy Tắc
+
+### 🎯 Nguyên Tắc Cốt Lõi
+1. **Git = Terminal trực tiếp** (run_terminal_cmd)
+2. **Sudo = System terminal**
+3. **Safe commands = MCP**
+4. **Dangerous commands = Bị chặn**
+5. **Tree > Ls** (Ưu tiên tree cho file system exploration)
+
+### 📋 Checklist Trước Khi Dùng MCP
+- [ ] Không phải Git command
+- [ ] Không có sudo
+- [ ] Không phải lệnh nguy hiểm (rm, mv)
+- [ ] Có đường dẫn tuyệt đối cho working_directory
+- [ ] Không cần authentication
+- [ ] Không phải lệnh tương tác
+- [ ] Ưu tiên dùng `tree` thay vì `ls` cho file system exploration
+
+### 🔄 Workflow
+1. Phân tích loại lệnh
+2. Kiểm tra yêu cầu
+3. Chọn tool phù hợp
+4. Thực thi và xử lý kết quả
+
+---
+
+**Lưu ý**: Quy tắc này dựa trên phân tích codebase MCP và bài học kinh nghiệm từ dự án ubuntu-lenovo-t14. Luôn cập nhật khi có thay đổi trong MCP configuration.
+description:
+globs:
+alwaysApply: false
+---

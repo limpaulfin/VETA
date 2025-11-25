@@ -1,0 +1,308 @@
+# Role-Prompt Claude Code Developer Optimizer | Tối Ưu Hóa Prompt Cho Claude Lập Trình Viên
+
+*Mod by Fong on 2025-07-27--19-43-PM*
+
+## Overview | Tổng Quan
+
+This rule provides a **systematic framework** for optimizing prompts when working with Claude for **software development tasks**. It emphasizes **bilingual English-Vietnamese format** with **precise technical terminology** in English.
+
+## Core Principles | Nguyên Tắc Cốt Lõi
+
+### 1. Bilingual Format | Định Dạng Song Ngữ
+- **English**: Precise technical terminology (e.g., "API Endpoint", "Database Schema")
+- **Vietnamese**: Clear, natural translation for accessibility
+- **Consistency**: Uniform structure across all sections
+
+### 2. Technical Accuracy | Độ Chính Xác Kỹ Thuật
+- **Precise English**: Use exact technical terms, not general descriptions
+- **Domain-specific**: Tailor terminology to specific development domains
+- **Standard compliance**: Follow industry-standard naming conventions
+
+### 3. Structured Approach | Phương Pháp Có Cấu Trúc
+- **Role-Context-Instructions** framework
+- **Work Breakdown Structure (WBS)** for complex tasks
+- **Tracking system** with Markdown files
+- **Continuous testing** integration
+
+## Framework Template | Mẫu Framework
+
+```markdown
+# Role | Vai Trò
+[Specific technical role with precise English terminology]
+
+# Context | Bối Cảnh
+[Project context, current state, technical environment]
+
+# Instructions | Hướng Dẫn
+## Input | Đầu Vào
+[Technical input requirements with precise specifications]
+
+## Process | Quy Trình
+[Step-by-step technical process with exact terminology]
+
+## Output | Đầu Ra
+[Expected deliverables with technical specifications]
+
+# Work Breakdown Structure | Cấu Trúc Phân Tách Công Việc
+[Detailed WBS with technical task breakdown]
+
+# Technical Standards | Tiêu Chuẩn Kỹ Thuật
+[Specific technical requirements and constraints]
+
+# Example | Ví Dụ
+[Concrete example with technical implementation details]
+```
+
+## Technical Terminology Standards | Tiêu Chuẩn Thuật Ngữ Kỹ Thuật
+
+### Backend Development | Phát Triển Backend
+- **API Endpoint** → Điểm cuối API
+- **Database Schema** → Cấu trúc cơ sở dữ liệu
+- **Authentication Middleware** → Middleware xác thực
+- **Request Validation** → Xác thực yêu cầu
+- **Error Handling** → Xử lý lỗi
+- **Response Formatting** → Định dạng phản hồi
+
+### Frontend Development | Phát Triển Frontend
+- **Component Architecture** → Kiến trúc component
+- **State Management** → Quản lý trạng thái
+- **User Interface (UI)** → Giao diện người dùng
+- **User Experience (UX)** → Trải nghiệm người dùng
+- **Event Handling** → Xử lý sự kiện
+- **Data Binding** → Liên kết dữ liệu
+
+### Database Operations | Thao Tác Cơ Sở Dữ Liệu
+- **Database Query** → Truy vấn cơ sở dữ liệu
+- **Data Migration** → Di chuyển dữ liệu
+- **Index Optimization** → Tối ưu hóa chỉ mục
+- **Connection Pooling** → Pool kết nối
+- **Transaction Management** → Quản lý giao dịch
+
+### System Architecture | Kiến Trúc Hệ Thống
+- **Microservices Architecture** → Kiến trúc microservices
+- **Load Balancing** → Cân bằng tải
+- **Caching Strategy** → Chiến lược cache
+- **Security Implementation** → Triển khai bảo mật
+- **Performance Optimization** → Tối ưu hóa hiệu suất
+
+## Optimization Process | Quy Trình Tối Ưu Hóa
+
+### Step 1: Analyze Source Prompt | Phân Tích Prompt Gốc
+- Identify core technical requirements
+- Determine development domain
+- Extract key technical concepts
+
+### Step 2: Structure with Framework | Cấu Trúc Với Framework
+- Apply Role-Context-Instructions template
+- Create bilingual sections
+- Maintain technical accuracy
+
+### Step 3: Apply Technical Standards | Áp Dụng Tiêu Chuẩn Kỹ Thuật
+- Use precise English terminology
+- Provide clear Vietnamese translation
+- Ensure consistency across sections
+
+### Step 4: Add Implementation Details | Thêm Chi Tiết Triển Khai
+- Include specific technical examples
+- Provide code snippets where relevant
+- Add error handling scenarios
+
+### Step 5: Validate and Test | Xác Thực Và Kiểm Tra
+- Verify technical accuracy
+- Check bilingual consistency
+- Ensure actionability
+
+## Example Transformations | Ví Dụ Chuyển Đổi
+
+### Before Optimization | Trước Tối Ưu Hóa
+```
+Write a function to get user data
+```
+
+### After Optimization | Sau Tối Ưu Hóa
+```markdown
+# Role | Vai Trò
+**Backend Developer** specializing in **RESTful API development** and **database operations**
+
+# Context | Bối Cảnh
+**User data retrieval** functionality for **web application** with **MongoDB database**
+
+# Instructions | Hướng Dẫn
+## Input | Đầu Vào
+- **User ID**: Unique identifier for target user
+- **Authentication token**: JWT token for authorization
+
+## Process | Quy Trình
+1. **Validate** JWT token using authentication middleware
+2. **Query** MongoDB collection for user document
+3. **Sanitize** sensitive data (password, etc.)
+4. **Return** formatted JSON response
+
+## Output | Đầu Ra
+- **JSON response** with user data
+- **Error handling** for invalid requests
+- **HTTP status codes** for different scenarios
+
+# Technical Standards | Tiêu Chuẩn Kỹ Thuật
+- **Security**: JWT token validation required
+- **Performance**: Database query optimization
+- **Error Handling**: Comprehensive error responses
+- **Response Format**: Standard JSON structure
+```
+
+## Quality Assurance | Đảm Bảo Chất Lượng
+
+### Technical Accuracy Checklist | Danh Sách Kiểm Tra Độ Chính Xác Kỹ Thuật
+- [ ] Precise English terminology used
+- [ ] Technical concepts correctly translated
+- [ ] Industry standards followed
+- [ ] Domain-specific terms applied
+
+### Bilingual Consistency Checklist | Danh Sách Kiểm Tra Tính Nhất Quán Song Ngữ
+- [ ] All sections have both languages
+- [ ] Vietnamese translation is natural
+- [ ] Technical terms are consistent
+- [ ] Format is uniform throughout
+
+### Actionability Checklist | Danh Sách Kiểm Tra Tính Khả Thi
+- [ ] Clear, specific instructions
+- [ ] Measurable deliverables
+- [ ] Concrete examples provided
+- [ ] Error scenarios covered
+
+## Implementation Guidelines | Hướng Dẫn Triển Khai
+
+### When to Apply | Khi Nào Áp Dụng
+- **Software development tasks**
+- **Code review requests**
+- **System architecture discussions**
+- **Technical documentation creation**
+- **Debugging and troubleshooting**
+- **File analysis and content processing**
+- **Multi-language development projects**
+
+### Best Practices | Thực Hành Tốt Nhất
+1. **Always use precise technical terminology**
+2. **Provide bilingual format consistently**
+3. **Include specific examples and code snippets**
+4. **Maintain technical accuracy in both languages**
+5. **Follow industry-standard naming conventions**
+6. **Utilize appropriate MCP tools for file operations**
+7. **Implement systematic file analysis before optimization**
+
+### MCP Tools Integration | Tích Hợp MCP Tools
+
+#### File Reading & Analysis | Đọc Và Phân Tích File
+- **`mcp_fong-long-file-reader_readFileWithCommands`**: For comprehensive file analysis with intelligent keyword detection
+- **`mcp_fong-php-file-reader_readPhpFile`**: For PHP files with proper parsing and dependency analysis
+- **`mcp_fong-js-file-reader_readJsFile`**: For JavaScript files with dependency analysis
+- **`mcp_fong-linux-command-executor_runLinuxCommand`**: For Linux command execution with absolute paths
+- **`mcp_fong-image-reader_readImageFromPath`**: For image analysis and content extraction
+- **`markitdown-pdf-reader-mcp_convert_to_markdown`**: For PDF document conversion to Markdown
+
+#### Best Practice Implementation | Triển Khai Best Practice
+- **Systematic Analysis**: Always analyze project structure before optimization
+- **Tool Selection**: Choose appropriate MCP tool based on file type and task requirements
+- **Cross-Validation**: Use multiple tools for comprehensive analysis
+- **Path Management**: Use absolute paths for all file operations
+- **Error Handling**: Implement proper error handling for tool failures
+
+### Common Pitfalls to Avoid | Lỗi Thường Gặp Cần Tránh
+- Using general English instead of technical terms
+- Inconsistent bilingual formatting
+- Vague or ambiguous instructions
+- Missing technical context
+- Incomplete error handling scenarios
+- **Not utilizing appropriate MCP tools for file operations**
+- **Using relative paths instead of absolute paths**
+- **Skipping systematic analysis before optimization**
+
+## Critical Implementation Rules | Quy Tắc Triển Khai Quan Trọng
+
+### ⚠️ PROMPT CREATION ONLY | CHỈ TẠO PROMPT, KHÔNG THỰC HIỆN
+**QUAN TRỌNG**: Khi sử dụng hướng dẫn này, chỉ tạo ra **optimized prompt mới**, **KHÔNG THỰC HIỆN** prompt đó. Mục đích là tối ưu hóa prompt để người dùng có thể sử dụng sau.
+
+### Core Development Principles | Nguyên Tắc Phát Triển Cốt Lõi
+
+#### 1. Always Double-Check | Luôn Kiểm Tra Kỹ Lưỡng
+- **Never Assume, Always Verify**: Không bao giờ giả định, luôn luôn xác minh
+- **Critical Thinking**: Tư duy phản biện, suy nghĩ ngược lại
+- **Scientific Method**: Dựa trên logic và bằng chứng
+- **Verification Tools**: Sử dụng công cụ xác minh có sẵn
+
+#### 2. Always Use <thinking> | Luôn Sử Dụng <thinking>
+- **Transparent Reasoning**: Giải thích luồng suy nghĩ rõ ràng
+- **Decision Documentation**: Ghi lại các quyết định và lý do
+- **Analysis Process**: Mô tả quá trình phân tích
+- **Alternative Consideration**: Xem xét các phương án thay thế
+
+#### 3. Smart Workarounds | Giải Pháp Thông Minh
+- **KISS Principle**: Keep It Simple, Stupid - Giữ đơn giản
+- **SAFE Approach**: Ưu tiên giải pháp an toàn nhất
+- **DRY Principle**: Don't Repeat Yourself - Không lặp lại
+- **SOLID Principles**: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
+
+#### 4. File Size Limits | Giới Hạn Kích Thước File
+**Token Limit**: Mỗi file code mới tạo ra phải giữ ở ngưỡng tối đa **8000 tokens**
+
+**Quy Đổi:**
+- **8000 tokens** ≈ **32,000 characters** (ký tự)
+- **8000 tokens** ≈ **10,400 words** (từ)
+
+**Kiểm Tra Token Count:**
+```bash
+# Sử dụng MCP fong-linux-command-executor
+# Đếm characters (rough estimate: ~4 chars per token)
+wc -c filename.ext
+
+# Đếm words (rough estimate: ~1.3 words per token)  
+wc -w filename.ext
+
+# Ước tính token từ characters (conservative)
+echo "Estimated tokens: $(($(wc -c < filename.ext) / 4))"
+
+# Sử dụng MCP fong-long-file-reader để phân tích file lớn
+# getSuggestions tool để có recommendations thông minh
+```
+
+**Khi Vượt Quá Giới Hạn:**
+- Chia nhỏ file thành nhiều module
+- Tách logic thành các function riêng biệt
+- Sử dụng import/require để tái sử dụng code
+- Tạo file configuration riêng cho constants
+- **Sử dụng MCP tools để phân tích và tối ưu hóa file structure**
+
+### Quality Assurance Standards | Tiêu Chuẩn Đảm Bảo Chất Lượng
+
+#### Code Quality Checklist | Danh Sách Kiểm Tra Chất Lượng Code
+- [ ] **KISS**: Code đơn giản, dễ hiểu
+- [ ] **SAFE**: Không có rủi ro bảo mật hoặc lỗi
+- [ ] **DRY**: Không lặp lại logic
+- [ ] **SOLID**: Tuân thủ 5 nguyên tắc SOLID
+- [ ] **Token Limit**: Dưới 8000 tokens
+- [ ] **Documentation**: Có comment và documentation đầy đủ
+- [ ] **Error Handling**: Xử lý lỗi toàn diện
+- [ ] **Testing**: Có test cases cơ bản
+- [ ] **MCP Tool Usage**: Sử dụng MCP tools phù hợp cho file operations
+- [ ] **Path Management**: Sử dụng absolute paths cho tất cả file operations
+
+#### File Organization | Tổ Chức File
+- **Single Responsibility**: Mỗi file chỉ có một trách nhiệm chính
+- **Clear Naming**: Tên file mô tả rõ chức năng
+- **Proper Structure**: Cấu trúc file logic và dễ đọc
+- **Import Organization**: Sắp xếp import theo thứ tự chuẩn
+- **MCP Integration**: Tích hợp MCP tools cho file analysis và processing
+- **Cross-Platform Compatibility**: Đảm bảo tương thích đa nền tảng
+
+---
+
+**Technical Terms Used | Thuật Ngữ Kỹ Thuật Sử Dụng:**
+- **API Endpoint** /ˌeɪ.piːˈaɪ ˈendpɔɪnt/ /Ây-Pi-Ai En-đơ-poin/ (Application Programming Interface Endpoint)
+- **Database Schema** /ˈdeɪtəbeɪs ˈskiːmə/ /Đây-ta-bây-s Ski-ma/ (Database Structure)
+- **Authentication Middleware** /ɔːˌθentɪˈkeɪʃən ˈmɪdlweə/ /Ô-then-ti-kây-sần Mi-đơ-ue/ (Authentication Processing Layer)
+- **RESTful API** /ˈrestfʊl ˈeɪpiːaɪ/ /Rét-sờ-phun Ây-Pi-Ai/ (Representational State Transfer Application Programming Interface)
+- **JWT Token** /dʒeɪdʌbəljuːˈtiː ˈtəʊkən/ /Giây-Đu-bơ-liu-Ti Tô-kên/ (JSON Web Token)
+- **MCP Tools** /ˌem.siːˈpiː tuːlz/ /Em-Si-Pi Tu-lơ/ (Model Context Protocol Tools)
+- **File Analysis** /faɪl əˈnæləsɪs/ /Phai Ờ-nan-lơ-xít/ (File Content Analysis)
+- **Cross-Validation** /krɒs ˌvælɪˈdeɪʃən/ /Crốt Van-li-đây-sần/ (Multi-Tool Validation)
+- **Absolute Path** /ˈæbsəluːt pɑːθ/ /Áp-sơ-lu Pát/ (Complete File Path)

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  id="Definitions_Collaboration"
+  targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <!-- Collaboration -->
+  <bpmn:collaboration id="Collaboration_OrderProcess">
+    <bpmn:participant id="Participant_Customer" name="Customer" processRef="Process_Customer"/>
+    <bpmn:participant id="Participant_Vendor" name="Online Store" processRef="Process_Vendor"/>
+
+    <!-- Message Flows -->
+    <bpmn:messageFlow id="MessageFlow_1" name="Order" sourceRef="Task_PlaceOrder" targetRef="Task_ReceiveOrder"/>
+    <bpmn:messageFlow id="MessageFlow_2" name="Confirmation" sourceRef="Task_SendConfirmation" targetRef="Task_ReceiveConfirmation"/>
+    <bpmn:messageFlow id="MessageFlow_3" name="Product" sourceRef="Task_ShipProduct" targetRef="Task_ReceiveProduct"/>
+  </bpmn:collaboration>
+
+  <!-- Customer Process -->
+  <bpmn:process id="Process_Customer" name="Customer Process" isExecutable="false">
+
+    <bpmn:startEvent id="StartEvent_Customer" name="Need&#10;Product">
+      <bpmn:outgoing>Flow_C1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:task id="Task_PlaceOrder" name="Place&#10;Order">
+      <bpmn:incoming>Flow_C1</bpmn:incoming>
+      <bpmn:outgoing>Flow_C2</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task_ReceiveConfirmation" name="Receive&#10;Confirmation">
+      <bpmn:incoming>Flow_C2</bpmn:incoming>
+      <bpmn:outgoing>Flow_C3</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task_ReceiveProduct" name="Receive&#10;Product">
+      <bpmn:incoming>Flow_C3</bpmn:incoming>
+      <bpmn:outgoing>Flow_C4</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:endEvent id="EndEvent_Customer" name="Product&#10;Received">
+      <bpmn:incoming>Flow_C4</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="Flow_C1" sourceRef="StartEvent_Customer" targetRef="Task_PlaceOrder"/>
+    <bpmn:sequenceFlow id="Flow_C2" sourceRef="Task_PlaceOrder" targetRef="Task_ReceiveConfirmation"/>
+    <bpmn:sequenceFlow id="Flow_C3" sourceRef="Task_ReceiveConfirmation" targetRef="Task_ReceiveProduct"/>
+    <bpmn:sequenceFlow id="Flow_C4" sourceRef="Task_ReceiveProduct" targetRef="EndEvent_Customer"/>
+
+  </bpmn:process>
+
+  <!-- Vendor Process -->
+  <bpmn:process id="Process_Vendor" name="Vendor Process" isExecutable="false">
+
+    <bpmn:startEvent id="StartEvent_Vendor" name="Waiting">
+      <bpmn:outgoing>Flow_V1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:task id="Task_ReceiveOrder" name="Receive&#10;Order">
+      <bpmn:incoming>Flow_V1</bpmn:incoming>
+      <bpmn:outgoing>Flow_V2</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task_ProcessOrder" name="Process&#10;Order">
+      <bpmn:incoming>Flow_V2</bpmn:incoming>
+      <bpmn:outgoing>Flow_V3</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task_SendConfirmation" name="Send&#10;Confirmation">
+      <bpmn:incoming>Flow_V3</bpmn:incoming>
+      <bpmn:outgoing>Flow_V4</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task_ShipProduct" name="Ship&#10;Product">
+      <bpmn:incoming>Flow_V4</bpmn:incoming>
+      <bpmn:outgoing>Flow_V5</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:endEvent id="EndEvent_Vendor" name="Order&#10;Fulfilled">
+      <bpmn:incoming>Flow_V5</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="Flow_V1" sourceRef="StartEvent_Vendor" targetRef="Task_ReceiveOrder"/>
+    <bpmn:sequenceFlow id="Flow_V2" sourceRef="Task_ReceiveOrder" targetRef="Task_ProcessOrder"/>
+    <bpmn:sequenceFlow id="Flow_V3" sourceRef="Task_ProcessOrder" targetRef="Task_SendConfirmation"/>
+    <bpmn:sequenceFlow id="Flow_V4" sourceRef="Task_SendConfirmation" targetRef="Task_ShipProduct"/>
+    <bpmn:sequenceFlow id="Flow_V5" sourceRef="Task_ShipProduct" targetRef="EndEvent_Vendor"/>
+
+  </bpmn:process>
+
+  <!-- Diagram Information -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_OrderProcess">
+
+      <!-- Customer Pool -->
+      <bpmndi:BPMNShape id="Shape_Participant_Customer" bpmnElement="Participant_Customer" isHorizontal="true">
+        <dc:Bounds x="100" y="80" width="900" height="150"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Customer Start -->
+      <bpmndi:BPMNShape id="Shape_StartEvent_Customer" bpmnElement="StartEvent_Customer">
+        <dc:Bounds x="152" y="137" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="150" y="180" width="40" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_PlaceOrder" bpmnElement="Task_PlaceOrder">
+        <dc:Bounds x="250" y="115" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_ReceiveConfirmation" bpmnElement="Task_ReceiveConfirmation">
+        <dc:Bounds x="530" y="115" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_ReceiveProduct" bpmnElement="Task_ReceiveProduct">
+        <dc:Bounds x="770" y="115" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_EndEvent_Customer" bpmnElement="EndEvent_Customer">
+        <dc:Bounds x="922" y="137" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="913" y="180" width="54" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Vendor Pool -->
+      <bpmndi:BPMNShape id="Shape_Participant_Vendor" bpmnElement="Participant_Vendor" isHorizontal="true">
+        <dc:Bounds x="100" y="280" width="900" height="180"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Vendor Start -->
+      <bpmndi:BPMNShape id="Shape_StartEvent_Vendor" bpmnElement="StartEvent_Vendor">
+        <dc:Bounds x="152" y="352" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="149" y="395" width="42" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_ReceiveOrder" bpmnElement="Task_ReceiveOrder">
+        <dc:Bounds x="250" y="330" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_ProcessOrder" bpmnElement="Task_ProcessOrder">
+        <dc:Bounds x="390" y="330" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_SendConfirmation" bpmnElement="Task_SendConfirmation">
+        <dc:Bounds x="530" y="330" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_ShipProduct" bpmnElement="Task_ShipProduct">
+        <dc:Bounds x="770" y="330" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_EndEvent_Vendor" bpmnElement="EndEvent_Vendor">
+        <dc:Bounds x="922" y="352" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="916" y="395" width="48" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Customer Sequence Flows -->
+      <bpmndi:BPMNEdge id="Edge_Flow_C1" bpmnElement="Flow_C1">
+        <di:waypoint x="188" y="155"/>
+        <di:waypoint x="250" y="155"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_C2" bpmnElement="Flow_C2">
+        <di:waypoint x="350" y="155"/>
+        <di:waypoint x="530" y="155"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_C3" bpmnElement="Flow_C3">
+        <di:waypoint x="630" y="155"/>
+        <di:waypoint x="770" y="155"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_C4" bpmnElement="Flow_C4">
+        <di:waypoint x="870" y="155"/>
+        <di:waypoint x="922" y="155"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- Vendor Sequence Flows -->
+      <bpmndi:BPMNEdge id="Edge_Flow_V1" bpmnElement="Flow_V1">
+        <di:waypoint x="188" y="370"/>
+        <di:waypoint x="250" y="370"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_V2" bpmnElement="Flow_V2">
+        <di:waypoint x="350" y="370"/>
+        <di:waypoint x="390" y="370"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_V3" bpmnElement="Flow_V3">
+        <di:waypoint x="490" y="370"/>
+        <di:waypoint x="530" y="370"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_V4" bpmnElement="Flow_V4">
+        <di:waypoint x="630" y="370"/>
+        <di:waypoint x="770" y="370"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_V5" bpmnElement="Flow_V5">
+        <di:waypoint x="870" y="370"/>
+        <di:waypoint x="922" y="370"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- Message Flows -->
+      <bpmndi:BPMNEdge id="Edge_MessageFlow_1" bpmnElement="MessageFlow_1">
+        <di:waypoint x="300" y="195"/>
+        <di:waypoint x="300" y="330"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="310" y="255" width="28" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_MessageFlow_2" bpmnElement="MessageFlow_2">
+        <di:waypoint x="580" y="330"/>
+        <di:waypoint x="580" y="195"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="545" y="255" width="70" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_MessageFlow_3" bpmnElement="MessageFlow_3">
+        <di:waypoint x="820" y="330"/>
+        <di:waypoint x="820" y="195"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="827" y="255" width="40" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</bpmn:definitions>

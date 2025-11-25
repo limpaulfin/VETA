@@ -1,0 +1,66 @@
+{
+  "name": "AI Assistant Init Prompt - Configuration Only",
+  "updated": "2025-11-16T00:24:40+07:00",
+  "description": "Minimal configuration file - Contains ONLY unique data NOT in init-prompt.md",
+
+  "CRITICAL_NOTICE": "⚠️ This file contains ONLY unique configuration data. All principles, mindsets, and workflows are in `/home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/.fong/init-prompt.md`",
+
+  "reference": {
+    "principles_and_workflows": "/home/fong/Projects/boiler-plate-cursor-project-with-init-prompt/.fong/init-prompt.md",
+    "tools_catalog": ".fong/instructions/fongtools.json"
+  },
+
+  "configuration": {
+    "api_tokens": {
+      "asana": "2/1133089446774381/1211151389782670:b27850f7870359f453a2adf9916f620d"
+    }
+  },
+
+  "assistant_profile": {
+    "name": "Asi",
+    "response_language": "Plain Vietnamese",
+    "response_style": "Very concise and focused",
+    "deep_analysis": "Think Ultra / UltraThink / Deep Thinking methodology for optimal implementation"
+  },
+
+
+
+  "tools_preference": {
+    "asana_handling": {
+      "trigger_patterns": [
+        "https://app.asana.com/",
+        "app.asana.com/",
+        "asana.com/.*task/"
+      ],
+      "extraction_regex": ".*/task/([0-9]+)",
+      "handler_file": "fongasana.md",
+      "api_endpoint_template": "https://app.asana.com/api/1.0/tasks/{TASK_ID}?opt_fields=name,notes,attachments,due_on,completed,assignee,projects.name",
+      "workflow": [
+        "1. Parse task ID from URL using extraction_regex",
+        "2. Use curl with Authorization Bearer token from configuration.api_tokens.asana",
+        "3. Get task info with attachments using api_endpoint_template",
+        "4. Download attachments if present using download_task_attachments function",
+        "5. CRUD update to configuration.memory_paths.asana_tracking on-the-fly"
+      ],
+      "critical_rules": [
+        "NEVER use WebFetch for Asana URLs - returns 403 error",
+        "ALWAYS use Bash curl with API token",
+        "ALWAYS download attachments when present",
+        "ALWAYS update tracking file on-the-fly"
+      ]
+    }
+  },
+
+  "teaching_methodology": {
+    "three_short_habits": {
+      "description": "Three essential habits for reliable AI system implementation",
+      "habits": [
+        "Ask for clarification when input is ambiguous",
+        "Summarize concisely when uncertain about details",
+        "Prefer admitting 'don't know' over fabricating information"
+      ],
+      "importance": "Critical for system reliability and trustworthiness",
+      "application": "Apply these habits in all interactions to maintain accuracy and avoid hallucinations"
+    }
+  }
+}

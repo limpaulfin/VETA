@@ -1,0 +1,164 @@
+{
+  "version": "2.1.0",
+  "updated": "2025-10-20",
+  "description": "Tool catalog - MCP servers with core fallback and instruction files",
+  "mcp_servers": [
+    {
+      "name": "Python File Analyzer (ts-py-reader-mcp)",
+      "mcp_path": "ts-py-reader-mcp",
+      "mcp_endpoint": "node ts-py-reader-mcp/dist/index.js",
+      "core_fallback": "ts-py-reader",
+      "description": "Python file analyzer with dependency tracking, code structure analysis, and call graph generation"
+    },
+    {
+      "name": "PHP File Analyzer (ts-php-reader-mcp)",
+      "mcp_path": "ts-php-reader-mcp",
+      "mcp_endpoint": "node ts-php-reader-mcp/dist/index.js",
+      "core_fallback": "ts-php-reader",
+      "description": "PHP file analyzer with dependency tracking, namespace analysis, and class structure parsing"
+    },
+    {
+      "name": "TypeScript/JavaScript File Analyzer (ts-ts-js-reader-mcp)",
+      "mcp_path": "ts-ts-js-reader-mcp",
+      "mcp_endpoint": "node ts-ts-js-reader-mcp/dist/index.js",
+      "core_fallback": "ts-ts-js-reader",
+      "description": "TypeScript/JavaScript file analyzer with dependency tracking, import/export analysis, and React component detection"
+    },
+    {
+      "name": "Mem0 AI Memory Management (ts-mem0-mcp)",
+      "mcp_path": "ts-mem0-mcp",
+      "mcp_endpoint": "node ts-mem0-mcp/dist/index.js",
+      "core_fallback": null,
+      "description": "Persistent AI memory management with CRUD operations, semantic search, and cross-session context preservation. Nếu MCP unavaible thì dùng tool curl bên dưới"
+    },
+    {
+      "name": "Git History Search (ts-tuc-mang-minh-mcp)",
+      "mcp_path": "ts-tuc-mang-minh-mcp",
+      "mcp_endpoint": "node ts-tuc-mang-minh-mcp/dist/index.js",
+      "core_fallback": "ts-tuc-mang-minh",
+      "description": "Git commit history and VSCode/Cursor local history search with file-specific tracking"
+    }
+  ],
+  "instructions": [
+    {
+      "name": "Mem0 Memory System - Persistent memory management with CRUD operations",
+      "file": ".fong/instructions/instructions-mem0.md"
+    },
+    {
+      "name": "Notion API CRUD - Complete curl-based Notion workspace integration",
+      "file": ".fong/instructions/fongnotion.md"
+    },
+    {
+      "name": "Perplexity AI Research - PhD-level research with THINK ULTRA methodology",
+      "file": ".fong/instructions/fongperplexicity.md"
+    },
+    {
+      "name": "MCP Safe Calculation Math Engine - Secure mathematical calculations via MCP",
+      "file": ".fong/instructions/instructions-mcp-safe-calculation-math-engine.md"
+    },
+    {
+      "name": "arXiv Query System - Academic paper search and analysis",
+      "file": ".fong/instructions/instructions-arxiv-query.md"
+    },
+    {
+      "name": "RAG Knowledge Sources - Query programming books and documentation",
+      "file": ".fong/instructions/instructions-dkm-sources-knowledgebase.md"
+    },
+    {
+      "name": "Autochrome MCP - Browser automation and web scraping",
+      "file": ".fong/instructions/instructions-autochrome.md"
+    },
+    {
+      "name": "CRUD Obsidian Notes - Obsidian knowledge base management",
+      "file": ".fong/instructions/instructions-CRUD-obsidian-notes.md"
+    },
+    {
+      "name": "Push/Pull Boiler-plate - Sync instructions across projects",
+      "file": ".fong/instructions/instructions-push-pull-boiler-plate.md"
+    },
+    {
+      "name": "Align Memory - Memory alignment and synchronization protocol",
+      "file": ".fong/instructions/instructions-align-memory.md"
+    },
+    {
+      "name": "Read Long File - Large file processing strategies",
+      "file": ".fong/instructions/instructions-read-long-file.md"
+    },
+    {
+      "name": "Autodebug Notebook - Jupyter notebook debugging automation",
+      "file": ".fong/instructions/instructions-autodebug-notebook.md"
+    },
+    {
+      "name": "Autodebug Python - Python script debugging automation",
+      "file": ".fong/instructions/instructions-autodebug-python.md"
+    },
+    {
+      "name": "Pool Memory - Cross-project knowledge sharing",
+      "file": ".fong/instructions/instructions-pool-memory.md"
+    },
+    {
+      "name": "Paper Analysis Clone Process - Academic paper analysis workflow",
+      "file": ".fong/instructions/instructions-paper-analysis-clone-process.md"
+    },
+    {
+      "name": "Read Image PhD-level Chart Analysis - Image and chart interpretation",
+      "file": ".fong/instructions/instructions-read-image-phd-level-chart-analysis-framework.md"
+    },
+    {
+      "name": "Tuc Mang Minh - Git history search and file tracking",
+      "file": ".fong/instructions/instructions-tuc-mang-minh.md"
+    },
+    {
+      "name": "Notebook Creator - Jupyter notebook creation and management",
+      "file": ".fong/instructions/instructions-notebook-ipynb-creator.md"
+    },
+    {
+      "name": "RAG Kali Security Books - Security documentation queries",
+      "file": ".fong/instructions/instructions-RAG-kali-security-books.md"
+    },
+    {
+      "name": "RAG Laravel Books - Laravel framework documentation",
+      "file": ".fong/instructions/instructions-RAG-Laravel-books.md"
+    },
+    {
+      "name": "RAG Python Clean Code Books - Python best practices",
+      "file": ".fong/instructions/instructions-RAG-python-clean-code-books.md"
+    },
+    {
+      "name": "SSH Xubuntu to Ubuntu - SSH connection setup",
+      "file": ".fong/instructions/instructions-ssh-xubuntu-2-ubuntu.md"
+    },
+    {
+      "name": "VirtualBox - VM management instructions",
+      "file": ".fong/instructions/instructions-virtualbox.md"
+    },
+    {
+      "name": "Fong Task - Task management with Asana integration",
+      "file": ".fong/instructions/fongtask.md"
+    },
+    {
+      "name": "Fong Memory - Memory operations and search",
+      "file": ".fong/instructions/fongmemory.md"
+    },
+    {
+      "name": "Fong Tools - Tool selector and recommendations",
+      "file": ".fong/instructions/fongtools.md"
+    },
+    {
+      "name": "Fong Asana - Asana project management integration",
+      "file": ".fong/instructions/fongasana.md"
+    },
+    {
+      "name": "Fong Gitx - Advanced git operations",
+      "file": ".fong/instructions/fonggitx.md"
+    },
+    {
+      "name": "Fong Trace - Code tracing and debugging",
+      "file": ".fong/instructions/fongtrace.md"
+    },
+    {
+      "name": "Fong Init - Initialization and setup procedures",
+      "file": ".fong/instructions/fonginit.md"
+    }
+  ]
+}

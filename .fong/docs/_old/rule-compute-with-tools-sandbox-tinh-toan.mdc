@@ -1,0 +1,1427 @@
+# Rule: Compute with Tools - Precise Calculation
+
+## Purpose
+
+This rule defines how AI must use external tools (Linux commands, Python) to perform precise calculations instead of relying on internal reasoning logic.
+
+## Trigger Keywords
+
+- precise calculation
+- calculate precisely
+- compute value
+- determine value
+- calculate
+- compute
+- numerical analysis
+
+## Core Principles
+
+1. **Do not trust internal logic:** NEVER use internal reasoning for any calculation.
+2. **Use external tools:** Always use Linux commands or Python to perform calculations.
+3. **Prioritize accuracy:** Place result accuracy as the highest priority, even when it requires executing code.
+4. **Documentation and traceability:** Clearly document the calculation method used.
+5. **Mandatory verification:** ALWAYS double-check results with at least one alternative calculation method.
+6. **Multi-file modular approach:** Break complex calculations into smaller, manageable modules with multiple files instead of one large file.
+7. **Task tracking and planning:** Use a Markdown file to plan and track calculation tasks.
+8. **Sandbox mentality:** Remember that Python files are temporary sandboxes - prioritize working results over code quality.
+9. **Tool flexibility:** Choose whatever tool solves the problem - Python, Bash script, or direct command line tools.
+10. **Prefer MCP tools when available:** If MCP Linux command executor is available, prefer using it over standard tools.
+11. **UUID for all files:** ALL files created in _tmp directory MUST use UUID in their names for traceability and uniqueness.
+
+## File Naming Requirements
+
+### Mandatory UUID-based Naming
+
+**ALL files** created in the `_tmp` directory (scripts, data files, logs, etc.) MUST include a UUID in the filename:
+
+1. **Bash scripts:** Always use format `{uuid}.sh` (not `script_name.sh` or `matrix_calculations.sh`)
+   ```bash
+   # CORRECT naming
+   script_uuid=$(uuidgen)
+   script_file="_tmp/${script_uuid}.sh"
+   
+   # INCORRECT naming
+   script_file="_tmp/matrix_calculations.sh"  # Missing UUID
+   ```
+
+2. **Python scripts:** Always use format `{uuid}.py` (not `calculator.py` or `data_processor.py`)
+   ```bash
+   # CORRECT naming
+   script_uuid=$(uuidgen)
+   script_file="_tmp/${script_uuid}.py"
+   
+   # INCORRECT naming
+   script_file="_tmp/calculator.py"  # Missing UUID
+   ```
+
+3. **Markdown plans:** Always use format `{uuid}.md` (not `calculation_plan.md` or `notes.md`)
+   ```bash
+   # CORRECT naming
+   plan_uuid=$(uuidgen)
+   plan_file="_tmp/${plan_uuid}.md"
+   
+   # INCORRECT naming
+   plan_file="_tmp/calculation_plan.md"  # Missing UUID
+   ```
+
+4. **Data files:** Include UUID in the name, even for temporary data files
+   ```bash
+   # CORRECT naming
+   data_uuid=$(uuidgen)
+   data_file="_tmp/${data_uuid}_data.txt"
+   
+   # INCORRECT naming
+   data_file="_tmp/data.txt"  # Missing UUID
+   ```
+
+### Benefits of UUID Naming
+
+- **Prevents overwriting:** Multiple scripts won't accidentally use the same filename
+- **Facilitates tracing:** Each calculation artifact can be linked to its originating process
+- **Enables parallel processing:** Multiple calculation workflows can run simultaneously
+- **Supports audit trails:** Every calculation can be identified uniquely
+
+## MCP Tools Usage
+
+When MCP (Multi-Capability Platform) tools are available, they should be preferred over standard tools:
+
+1. **MCP Linux Command Executor**:
+   - If `mcp_fong-linux-command-executor_runLinuxCommand` is available, use it instead of `run_terminal_cmd`
+   - For reading this rule file itself, use:
+     ```
+     mcp_fong-linux-command-executor_runLinuxCommand --command="cat /home/fong/Dropbox/Projects/boiler-plate-cursor-project-with-init-prompt/.cursor/rules/rule-compute-with-tools-sandbox-tinh-toan.mdc"
+     ```
+
+2. **MCP File Readers**:
+   - If `mcp_fong-long-file-reader_readFileWithCommands` is available, use it instead of standard `read_file` tool
+   - For PHP files, prefer `mcp_fong-php-file-reader_readPhpFile`
+   - For JS files, prefer `mcp_fong-js-file-reader_readJsFile`
+
+3. **When to use MCP tools**:
+   - For running Linux commands (shell scripts, command-line calculations)
+   - For reading files (especially large files that need inspection)
+   - For specialized file type analysis
+
+## Python Files as Sandbox
+
+When creating Python files for calculations, remember:
+
+1. **KISS (Keep It Simple, Stupid):** Always prefer the simplest solution that works.
+2. **Make it work first:** Focus on getting the correct result, not on perfect code.
+3. **Hard coding is acceptable:** Feel free to hard code values when needed.
+4. **Output accuracy over code beauty:** The correctness of the calculation result is the ONLY priority.
+5. **No need for maintainable code:** Since these are temporary sandbox files, don't waste time on:
+   - Extensive documentation
+   - Complex abstraction layers
+   - Perfect naming conventions
+   - Optimized algorithms (unless speed is critical)
+   - Test coverage
+
+All that matters is:
+- Does it produce the correct result?
+- Is the result verified by at least one other method?
+- Is it reasonably understandable for the immediate task?
+
+## Tool Selection Flexibility
+
+The goal is to solve the problem efficiently, not to enforce a specific tool:
+
+1. **Use whatever works best:**
+   - For simple calculations: Direct command line tools (`expr`, `bc`, `awk`)
+   - For medium complexity: Bash scripts (`{uuid}.sh` in `_tmp/` folder)
+   - For high complexity: Python scripts (`{uuid}.py` in `_tmp/` folder)
+
+2. **Bash script advantages:**
+   - Excellent for chaining multiple command line tools
+   - Better for file operations and text processing
+   - No need for external libraries
+   - Can be created with `{uuid}.sh` naming in `_tmp/` folder
+
+3. **Decision criteria:**
+   - Simplicity of implementation
+   - Speed of development
+   - Ability to verify results
+   - Familiarity with the tool's capabilities
+
+4. **Example scenario:**
+   ```bash
+   # Generate UUID
+   script_uuid=$(uuidgen)
+   
+   # Create bash script
+   cat > _tmp/${script_uuid}.sh << 'EOL'
+   #!/bin/bash
+   
+   # Process data with various tools
+   data_file="_tmp/data.txt"
+   echo "Processing data from $data_file..."
+   
+   # Calculate sum with awk
+   sum=$(awk '{ sum += $1 } END { print sum }' "$data_file")
+   
+   # Calculate average with bc
+   count=$(wc -l < "$data_file")
+   avg=$(echo "scale=4; $sum / $count" | bc)
+   
+   echo "Sum: $sum"
+   echo "Average: $avg"
+   EOL
+   
+   # Make executable
+   chmod +x _tmp/${script_uuid}.sh
+   
+   # Execute
+   _tmp/${script_uuid}.sh
+   ```
+
+## Verification Requirements
+
+### Mandatory Double-Check Process
+
+For ALL calculations, regardless of complexity:
+
+1. **Primary calculation:** Use the most appropriate tool for the calculation
+2. **Verification calculation:** Use a DIFFERENT method/tool to verify the result
+3. **Result comparison:** Compare the results from both methods
+   - If results match: Proceed with high confidence
+   - If results differ: Perform a third calculation with yet another method
+   - If still inconsistent: Use Python as the definitive method or revisit the calculation approach
+
+Example:
+```bash
+# Primary calculation
+primary_result=$(expr 5 + 7)
+
+# Verification calculation (different tool)
+verify_result=$(echo "5 + 7" | bc)
+
+# Compare results
+if [ "$primary_result" = "$verify_result" ]; then
+    echo "Verified: $primary_result (high confidence)"
+else
+    # Third verification (different method)
+    third_result=$(echo | awk '{print 5+7}')
+    
+    # Final decision logic
+    if [ "$primary_result" = "$third_result" ]; then
+        echo "Verified: $primary_result (medium confidence)"
+    elif [ "$verify_result" = "$third_result" ]; then
+        echo "Verified: $verify_result (medium confidence)"
+    else
+        echo "Inconclusive results: Using Python for definitive answer"
+        # Run Python calculation
+    fi
+fi
+```
+
+## Task Tracking with MD Plan
+
+For any calculation task, ALWAYS create a tracking Markdown file:
+
+1. **Create tracking file with UUID:**
+
+```bash
+# Generate UUID
+plan_uuid=$(uuidgen)
+plan_file="_tmp/${plan_uuid}.md"
+
+# Create plan file
+cat > $plan_file << 'EOL'
+# Calculation Task Plan: [Task Description]
+
+## Overview
+- **Created:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+- **Purpose:** [Brief description of calculation purpose]
+- **Task UUID:** ${plan_uuid}
+
+## Approach
+- [Outline the calculation strategy]
+- [List methods for verification]
+
+## Task Breakdown
+1. [First subtask]
+2. [Second subtask]
+3. [...]
+
+## Files Created
+- [Will be populated during execution]
+
+## Results
+- [Will be populated after execution]
+
+## Verification
+- [Will be populated after verification]
+
+## Conclusion
+- [Will be populated after analysis]
+EOL
+
+echo "Created task plan at $plan_file"
+```
+
+2. **Update the plan as tasks progress:**
+
+```bash
+# Update the plan file with new information
+sed -i '/^## Files Created/a\
+- `file1.py`: [Description of purpose]' $plan_file
+
+# Update results section
+sed -i '/^## Results/a\
+- Method 1: Result = 42.35' $plan_file
+```
+
+3. **ALWAYS refer to the plan file in the execution process**
+
+## Usage Process
+
+### 1. Linux Commands (For Simple Calculations)
+
+Prioritize Linux commands for simple, quick calculations:
+
+```bash
+# Basic addition/subtraction/multiplication/division
+echo "scale=10; 5.2 * 7.8" | bc
+
+# Using expr for integer calculations
+expr 5 + 7
+
+# Using awk for more complex calculations
+echo | awk '{print 5.2 * 7.8}'
+
+# Using bash arithmetic
+echo $((5 + 7))
+```
+
+### 2. Python (For Complex Calculations)
+
+When performing complex calculations, MUST follow these enhanced processes:
+
+#### A. Multi-File Modular Approach
+
+For complex calculations that benefit from modularization:
+
+1. **Create task plan file with UUID**:
+
+```bash
+mkdir -p _tmp
+plan_uuid=$(uuidgen)
+plan_file="_tmp/${plan_uuid}.md"
+
+# Create plan file as described in Task Tracking section
+```
+
+2. **Create separate Python modules for different parts of the calculation**:
+
+```bash
+# Create directory for project modules
+mkdir -p _tmp/${plan_uuid}_modules
+
+# Module 1: Data preparation
+module1_uuid=$(uuidgen)
+module1_file="_tmp/${plan_uuid}_modules/${module1_uuid}_data_prep.py"
+
+# Module 2: Core calculation
+module2_uuid=$(uuidgen)
+module2_file="_tmp/${plan_uuid}_modules/${module2_uuid}_calculator.py"
+
+# Module 3: Result verification
+module3_uuid=$(uuidgen) 
+module3_file="_tmp/${plan_uuid}_modules/${module3_uuid}_verifier.py"
+
+# Module 4: Main runner
+main_uuid=$(uuidgen)
+main_file="_tmp/${plan_uuid}_modules/${main_uuid}_main.py"
+
+# Update plan file with file information
+sed -i '/^## Files Created/a\
+- `'${module1_file}'`: Data preparation module\
+- `'${module2_file}'`: Core calculation module\
+- `'${module3_file}'`: Result verification module\
+- `'${main_file}'`: Main runner script' $plan_file
+```
+
+3. **Create each module with focused responsibility (SOLID principles)**
+
+```bash
+# Each module should be <8000 tokens (~400-600 lines maximum)
+# Each module should have a single responsibility
+
+# Example for data preparation module
+cat > $module1_file << 'EOL'
+"""
+Data preparation module
+"""
+
+class DataPreparation:
+    """Handle data loading and preparation."""
+    
+    @staticmethod
+    def load_data(file_path):
+        """Load data from file."""
+        # Implementation
+        pass
+    
+    @staticmethod
+    def preprocess_data(raw_data):
+        """Preprocess raw data."""
+        # Implementation
+        pass
+EOL
+
+# Example for calculator module
+# Create similar files for other modules
+```
+
+4. **Create main runner to integrate all modules**
+
+```bash
+# Main runner script
+cat > $main_file << 'EOL'
+"""
+Main runner script that integrates all modules
+"""
+import sys
+import os
+
+# Add parent directory to path to enable imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Import modules
+from ${module1_uuid}_data_prep import DataPreparation
+from ${module2_uuid}_calculator import Calculator
+from ${module3_uuid}_verifier import ResultVerifier
+
+def main():
+    """Main execution function."""
+    # Load and prepare data
+    data = DataPreparation.load_data("path/to/data")
+    preprocessed_data = DataPreparation.preprocess_data(data)
+    
+    # Perform calculation
+    calculator = Calculator()
+    primary_result = calculator.calculate(preprocessed_data)
+    
+    # Verify result
+    verifier = ResultVerifier()
+    verification_result = verifier.verify(preprocessed_data)
+    
+    # Compare results
+    is_verified = abs(primary_result - verification_result) < 0.0001
+    
+    # Output results
+    print(f"PRIMARY RESULT: {primary_result}")
+    print(f"VERIFICATION RESULT: {verification_result}")
+    print(f"VERIFIED: {is_verified}")
+
+if __name__ == "__main__":
+    main()
+EOL
+```
+
+5. **Run and update plan with results**
+
+```bash
+# Execute main runner
+python3 $main_file > _tmp/${plan_uuid}_results.txt
+
+# Update plan with results
+sed -i '/^## Results/a\
+- See complete results in: `_tmp/'${plan_uuid}'_results.txt`' $plan_file
+```
+
+#### B. Single Python File (For Simpler Calculations)
+
+For simpler calculations where a single file is sufficient:
+
+1. **Create `_tmp` directory if it doesn't exist**
+
+```bash
+mkdir -p _tmp
+```
+
+2. **Create a unique UUID for the Python file**
+
+```bash
+# Generate UUID
+python_file_uuid=$(uuidgen)
+python_file="_tmp/${python_file_uuid}.py"
+```
+
+3. **Create a Python file adhering to SOLID principles**
+
+```bash
+cat > $python_file << 'EOL'
+"""
+Calculator module for precise computation.
+Created: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+Purpose: [Description of calculation purpose]
+"""
+
+
+class Calculator:
+    """Single Responsibility: Perform specific calculations."""
+    
+    @staticmethod
+    def compute(input_data):
+        """
+        Perform the required computation.
+        
+        Args:
+            input_data: The input for calculation
+            
+        Returns:
+            The calculation result
+        """
+        # Actual computation here
+        result = input_data * 2  # Replace with actual calculation
+        return result
+
+
+if __name__ == "__main__":
+    # Input values
+    input_value = 42  # Replace with actual input value
+    
+    # Perform calculation
+    result = Calculator.compute(input_value)
+    
+    # Output result - DO NOT CHANGE THIS FORMAT
+    print(f"RESULT: {result}")
+EOL
+```
+
+4. **Run the Python file to get the result**
+
+```bash
+# Execute Python file
+python3 $python_file
+```
+
+5. **Validate the result by capturing the output**
+
+```bash
+result=$(python3 $python_file | grep "RESULT:" | cut -d' ' -f2)
+echo "Calculation result: $result"
+```
+
+## File Size Guidelines
+
+1. **Token limit per file:** Each Python file MUST be kept under 8000 tokens (approximately 30-40KB or ~600 lines of code).
+
+2. **When to split into multiple files:**
+   - When calculation requires multiple distinct steps
+   - When total code would exceed 8000 tokens
+   - When different parts have different responsibilities
+   - When parts need to be reused across different calculations
+
+3. **Monitoring file sizes:**
+   ```bash
+   # Check file size in bytes
+   wc -c $python_file
+   
+   # Estimate token count (approximate)
+   chars=$(wc -c < $python_file)
+   estimated_tokens=$((chars / 4))
+   echo "Estimated tokens: $estimated_tokens (max allowed: 8000)"
+   ```
+
+## Usage Scenarios
+
+### Scenario 1: Basic Calculation with Verification
+
+```bash
+# Primary calculation
+primary_result=$(echo "scale=4; (17.3 * 2.5) / 3.1" | bc)
+echo "Primary result: $primary_result"
+
+# Verification calculation (different method)
+verify_result=$(echo | awk '{print (17.3 * 2.5) / 3.1}')
+echo "Verification result: $verify_result"
+
+# Compare results (allowing small floating point differences)
+if (( $(echo "$primary_result - $verify_result < 0.0001" | bc -l) )) && \
+   (( $(echo "$verify_result - $primary_result < 0.0001" | bc -l) )); then
+    echo "Results verified (high confidence)"
+else
+    echo "Discrepancy detected - performing third verification"
+    # Use Python for third verification
+fi
+```
+
+### Scenario 2: Statistical Calculation
+
+```python
+import numpy as np
+import statistics  # For verification
+
+data = [12.3, 45.6, 78.9, 10.11, 12.13]
+
+# Primary calculation with numpy
+np_mean = np.mean(data)
+np_median = np.median(data)
+np_std = np.std(data)
+
+# Verification with statistics module
+stats_mean = statistics.mean(data)
+stats_median = statistics.median(data)
+stats_std = statistics.stdev(data)  # Sample standard deviation
+
+# Compare results
+print(f"RESULT: Primary: Mean={np_mean}, Median={np_median}, StdDev={np_std}")
+print(f"VERIFICATION: Mean={stats_mean}, Median={stats_median}, StdDev={stats_std}")
+```
+
+### Scenario 3: Multi-variable Calculation
+
+```python
+def calculate_mortgage(principal, rate, years):
+    """Calculate monthly mortgage payment."""
+    monthly_rate = rate / 100 / 12
+    months = years * 12
+    payment = principal * (monthly_rate * (1 + monthly_rate)**months) / ((1 + monthly_rate)**months - 1)
+    return payment
+
+# Alternative implementation for verification
+def verify_mortgage(principal, rate, years):
+    """Alternative mortgage calculation for verification."""
+    r = rate / 100 / 12
+    n = years * 12
+    payment = principal * (r * (1 + r)**n) / ((1 + r)**n - 1)
+    return payment
+
+principal = 300000  # $300,000 loan
+rate = 5.5  # 5.5% interest rate
+years = 30  # 30-year mortgage
+
+# Calculate with both methods
+primary_payment = calculate_mortgage(principal, rate, years)
+verify_payment = verify_mortgage(principal, rate, years)
+
+# Compare results
+print(f"RESULT: Primary={primary_payment}, Verification={verify_payment}")
+if abs(primary_payment - verify_payment) < 0.01:
+    print(f"Verified result: {primary_payment:.2f}")
+else:
+    print("Discrepancy detected - investigating...")
+```
+
+### Scenario 4: Complex Multi-Module Calculation
+
+For this scenario, refer to the Multi-File Modular Approach section above.
+
+## Result Return Rules
+
+1. **Format results:** Always return results with appropriate precision for the problem (default 4 decimal places if not specifically required).
+2. **Explain methodology:** Briefly describe the calculation method used.
+3. **Source code citation:** Cite the source code used for calculation.
+4. **Reliability confirmation:** Assess the reliability of the result.
+5. **Verification reporting:** ALWAYS report both the primary result and verification result(s).
+
+## Best Practices
+
+1. **Use specialized libraries:** Prioritize specialized Python libraries for different types of calculations:
+   - `numpy`, `scipy` for scientific computing
+   - `pandas` for data analysis
+   - `math` for basic mathematical functions
+   - `sympy` for symbolic computation and algebra
+
+2. **Exception handling:** Always include error and exception handling in Python code.
+
+3. **Script runtime limits:** Set timeouts for complex calculation scripts.
+
+4. **Result verification:** When possible, verify results using alternative calculation methods.
+
+5. **Use different algorithms:** For verification, prioritize using fundamentally different algorithms rather than just different implementations of the same algorithm.
+
+6. **Cross-method verification:** For highest confidence, verify between language types (e.g., bash vs. Python) rather than just between tools in the same language.
+
+7. **Multi-tool coordination:** For complex problems, use a combination of tools and approaches (Linux commands, Python scripts, etc.) to reach a solution.
+
+8. **Create clean interfaces between modules:** Ensure that data passed between modules is well-defined and properly documented.
+
+9. **Use appropriate data exchange formats:** When passing data between tools, use standard formats like CSV, JSON, or plain text.
+
+## Specific Examples
+
+### Example 1: Compound Interest Calculation with Verification
+
+```bash
+mkdir -p _tmp
+uuid=$(uuidgen)
+python_file="_tmp/${uuid}.py"
+
+cat > $python_file << 'EOL'
+"""
+Compound Interest Calculator with Verification
+"""
+import math
+import numpy as np  # For verification
+
+def calculate_compound_interest(principal, rate, years, compounds_per_year=1):
+    """Calculate compound interest."""
+    rate_decimal = rate / 100
+    total = principal * math.pow(1 + rate_decimal/compounds_per_year, compounds_per_year * years)
+    return total
+
+def verify_compound_interest(principal, rate, years, compounds_per_year=1):
+    """Alternative method for verification."""
+    rate_decimal = rate / 100
+    # Using numpy for verification
+    total = principal * np.power(1 + rate_decimal/compounds_per_year, compounds_per_year * years)
+    return total
+
+if __name__ == "__main__":
+    principal = 10000  # $10,000 initial investment
+    rate = 5  # 5% annual interest rate
+    years = 10  # 10 years
+    compounds_per_year = 12  # monthly compounding
+    
+    # Primary calculation
+    result = calculate_compound_interest(principal, rate, years, compounds_per_year)
+    
+    # Verification calculation
+    verify_result = verify_compound_interest(principal, rate, years, compounds_per_year)
+    
+    # Compare and report
+    print(f"RESULT: {result:.2f}")
+    print(f"VERIFY: {verify_result:.2f}")
+    
+    if abs(result - verify_result) < 0.01:
+        print(f"FINAL: {result:.2f} (verified)")
+    else:
+        print(f"DISCREPANCY: Check calculation approach")
+EOL
+
+python3 $python_file
+```
+
+### Example 2: Fibonacci Sequence with Verification
+
+```bash
+mkdir -p _tmp
+uuid=$(uuidgen)
+python_file="_tmp/${uuid}.py"
+
+cat > $python_file << 'EOL'
+"""
+Fibonacci Calculator with Multiple Methods for Verification
+"""
+
+class FibonacciCalculator:
+    """Calculate Fibonacci numbers efficiently with memoization."""
+    
+    def __init__(self):
+        self.memo = {0: 0, 1: 1}
+    
+    def calculate(self, n):
+        """Calculate nth Fibonacci number using recursion with memoization."""
+        if n not in self.memo:
+            self.memo[n] = self.calculate(n-1) + self.calculate(n-2)
+        return self.memo[n]
+
+def verify_fibonacci_iterative(n):
+    """Calculate Fibonacci number using iteration for verification."""
+    if n <= 0:
+        return 0
+    if n == 1:
+        return 1
+        
+    a, b = 0, 1
+    for _ in range(2, n+1):
+        a, b = b, a + b
+    return b
+
+def verify_fibonacci_formula(n):
+    """Calculate Fibonacci number using Binet's formula (approximate for large n)."""
+    import math
+    phi = (1 + math.sqrt(5)) / 2
+    return round((math.pow(phi, n) - math.pow(-phi, -n)) / math.sqrt(5))
+
+if __name__ == "__main__":
+    n = 35
+    
+    # Primary calculation (recursive with memoization)
+    calculator = FibonacciCalculator()
+    result1 = calculator.calculate(n)
+    
+    # Verification 1 (iterative)
+    result2 = verify_fibonacci_iterative(n)
+    
+    # Verification 2 (formula-based)
+    result3 = verify_fibonacci_formula(n)
+    
+    # Report all results
+    print(f"RESULT (recursive): {result1}")
+    print(f"VERIFY (iterative): {result2}")
+    print(f"VERIFY (formula):   {result3}")
+    
+    # Compare results
+    if result1 == result2 == result3:
+        print(f"FINAL: {result1} (high confidence - all methods agree)")
+    elif result1 == result2:
+        print(f"FINAL: {result1} (medium confidence - 2 methods agree)")
+    else:
+        print("DISCREPANCY: Methods disagree, investigate")
+EOL
+
+python3 $python_file
+```
+
+### Example 3: Multi-Module Complex Analysis
+
+```bash
+mkdir -p _tmp
+plan_uuid=$(uuidgen)
+plan_dir="_tmp/${plan_uuid}_modules"
+mkdir -p $plan_dir
+
+# Create planning file
+plan_file="_tmp/${plan_uuid}.md"
+cat > $plan_file << EOL
+# Complex Data Analysis Task Plan
+
+## Overview
+- **Created:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+- **Purpose:** Process large dataset and calculate statistical metrics
+- **Task UUID:** ${plan_uuid}
+
+## Approach
+- Split processing into modular components
+- Use multiple verification methods
+- Ensure each module is under 8000 tokens
+
+## Task Breakdown
+1. Data loading and preprocessing
+2. Statistical analysis
+3. Visualization preparation
+4. Result verification
+5. Integration and final reporting
+
+## Files Created
+- Will be populated during execution
+
+## Results
+- Will be populated after execution
+EOL
+
+# Create data loader module
+loader_uuid=$(uuidgen)
+loader_file="${plan_dir}/${loader_uuid}_data_loader.py"
+
+cat > $loader_file << EOL
+"""
+Data loader module - Responsible for loading and preprocessing data
+"""
+import pandas as pd
+import numpy as np
+
+class DataLoader:
+    @staticmethod
+    def load_data(file_path):
+        """Load data from CSV, JSON, or other formats."""
+        try:
+            # Attempt to load as CSV
+            return pd.read_csv(file_path)
+        except:
+            try:
+                # Attempt to load as JSON
+                return pd.read_json(file_path)
+            except:
+                # Generate sample data if file doesn't exist
+                print(f"File {file_path} not found, generating sample data")
+                return DataLoader.generate_sample_data()
+    
+    @staticmethod
+    def generate_sample_data(rows=1000):
+        """Generate sample data for testing."""
+        np.random.seed(42)
+        data = {
+            'value': np.random.lognormal(mean=4.0, sigma=0.8, size=rows),
+            'category': np.random.choice(['A', 'B', 'C', 'D'], size=rows),
+            'date': pd.date_range(start='2023-01-01', periods=rows)
+        }
+        return pd.DataFrame(data)
+    
+    @staticmethod
+    def preprocess_data(df):
+        """Clean and preprocess the dataframe."""
+        # Remove missing values
+        df = df.dropna()
+        
+        # Handle outliers (remove top/bottom 1%)
+        for col in df.select_dtypes(include=[np.number]).columns:
+            lower = df[col].quantile(0.01)
+            upper = df[col].quantile(0.99)
+            df = df[(df[col] >= lower) & (df[col] <= upper)]
+        
+        return df
+
+if __name__ == "__main__":
+    # Test the module
+    loader = DataLoader()
+    data = loader.generate_sample_data()
+    processed = loader.preprocess_data(data)
+    print(f"Generated data shape: {data.shape}")
+    print(f"Processed data shape: {processed.shape}")
+    print(processed.head())
+EOL
+
+# Update plan with the created file
+sed -i '/^## Files Created/a\
+- `'${loader_file}'`: Data loading and preprocessing module' $plan_file
+
+# Create more modules for analysis, visualization, etc.
+# [...]
+
+# Create main runner
+main_uuid=$(uuidgen)
+main_file="${plan_dir}/${main_uuid}_main.py"
+
+cat > $main_file << EOL
+"""
+Main runner that coordinates all modules
+"""
+import os
+import sys
+import time
+
+# Add parent directory to path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Import our modules
+from ${loader_uuid}_data_loader import DataLoader
+
+def main():
+    """Main execution function."""
+    start_time = time.time()
+    
+    # Step 1: Load and preprocess data
+    loader = DataLoader()
+    raw_data = loader.generate_sample_data(rows=10000)
+    processed_data = loader.preprocess_data(raw_data)
+    
+    print(f"Data loaded and processed in {time.time() - start_time:.2f} seconds")
+    print(f"Raw data shape: {raw_data.shape}")
+    print(f"Processed data shape: {processed_data.shape}")
+    
+    # Additional steps would be implemented here with other modules
+    # [...]
+    
+    print(f"Total execution time: {time.time() - start_time:.2f} seconds")
+
+if __name__ == "__main__":
+    main()
+EOL
+
+# Update plan with the created main file
+sed -i '/^## Files Created/a\
+- `'${main_file}'`: Main runner module' $plan_file
+
+# Execute the main module
+python3 $main_file > "_tmp/${plan_uuid}_results.txt"
+
+# Update the plan with results
+sed -i '/^## Results/a\
+- See complete results in `_tmp/'${plan_uuid}'_results.txt`' $plan_file
+
+echo "Task completed. See plan file at $plan_file and results at _tmp/${plan_uuid}_results.txt"
+```
+
+## Important Notes
+
+1. **Security:** NEVER execute code that could harm the system.
+2. **Performance:** Consider algorithm complexity and execution time.
+3. **Retain temporary files:** Python files created in the `_tmp` directory will be kept for reference, modification, or re-execution if needed.
+4. **Result consistency priority:** If multiple methods produce inconsistent results, prioritize accuracy over simplicity.
+5. **Documentation of discrepancies:** When methods disagree, document all approaches and explain possible reasons for the differences.
+6. **File size management:** Keep each Python file under 8000 tokens, split into multiple files when necessary.
+7. **Task tracking:** Always create and maintain a plan file (.md) to track the calculation process.
+8. **Multi-tool approach:** Don't hesitate to use a combination of tools (Linux commands, Python scripts, etc.) for complex problems.
+9. **Clean up option:** After task completion, you may remove temporary files if they are no longer needed.
+
+## Special Process for Iterative Problems
+
+For problems requiring multiple iterations or optimization, design scripts to:
+
+1. Save intermediate states
+2. Display progress
+3. Pause and resume from checkpoints
+4. Document iterations in the plan file
+
+## Conclusion
+
+By using this rule, AI will always provide accurate calculation results through external tools (Linux commands or Python) instead of relying on internal logic. The mandatory verification process ensures maximum accuracy and reliability by cross-checking results with multiple methods. For complex calculations, the multi-file modular approach with task planning ensures better organization, manageable file sizes, and clear documentation of the calculation process.
+
+## Tool Selection Guide
+
+### Data Processing & Analysis Tools
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **Pandas** | Phân tích dữ liệu có cấu trúc, xử lý CSV/Excel, data cleaning, thống kê mô tả | `pip install pandas` | Hiệu quả với dữ liệu dạng bảng, xử lý missing data tốt, tích hợp với các thư viện visualization |
+| **NumPy** | Tính toán ma trận, véc-tơ, đại số tuyến tính, phép biến đổi số học trên mảng lớn | `pip install numpy` | Tối ưu cho tính toán số học trên mảng, tốc độ cao, tiết kiệm bộ nhớ |
+| **Polars** | Xử lý dữ liệu lớn, phân tích song song, data wrangling | `pip install polars` | Nhanh hơn Pandas với dữ liệu lớn, xử lý song song, tối ưu bộ nhớ |
+| **Dask** | Big data, xử lý dữ liệu lớn hơn RAM, tính toán phân tán | `pip install dask[complete]` | Mở rộng pandas/numpy cho dữ liệu lớn, lazy evaluation, tính toán phân tán |
+| **Vaex** | Xử lý dữ liệu hàng tỷ dòng, lazy evaluation | `pip install vaex` | Xử lý file lớn out-of-memory, visualization tương tác, tốc độ cao |
+| **Apache Arrow** | Xử lý dữ liệu định dạng cột, trao đổi dữ liệu hiệu quả | `pip install pyarrow` | Định dạng hiệu quả cho memory, zero-copy reads, tối ưu cho phân tích |
+| **Modin** | Drop-in replacement for pandas, xử lý song song | `pip install modin` | API giống hệt pandas, tăng tốc xử lý dữ liệu lớn |
+| **datatable** | Xử lý dữ liệu cực lớn, tốc độ cao | `pip install datatable` | Siêu nhanh đọc file, xử lý bộ nhớ hiệu quả |
+
+### Scientific Computation
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **SciPy** | Tính toán khoa học, tối ưu hóa, xử lý tín hiệu, thống kê, đại số tuyến tính | `pip install scipy` | Thuật toán tối ưu hóa mạnh mẽ, hàm toán học đặc biệt, xử lý tín hiệu |
+| **SymPy** | Tính toán biểu tượng, đại số, giải phương trình, vi phân, tích phân | `pip install sympy` | Giải phương trình chính xác, phép tính vi tích phân biểu tượng |
+| **JAX** | Tính toán số học với GPU/TPU, ML, tối ưu hóa, differentiation | `pip install jax jaxlib` | JIT compilation, auto differentiation, tính toán song song |
+| **Julia (PyCall)** | Tính toán khoa học hiệu năng cao, numerics | `pip install julia pyjulia` | Tốc độ gần bằng C, cú pháp rõ ràng, thư viện toán học phong phú |
+| **Octave** | MATLAB-like computation, xử lý tín hiệu | `sudo apt install octave` | Tương thích MATLAB, plotting tốt, ma trận |
+| **R (rpy2)** | Thống kê, biostatistics, phân tích thống kê chuyên sâu | `pip install rpy2` | Thuật toán thống kê tiên tiến, plotting dễ sử dụng |
+| **PyMC** | Thống kê Bayesian, mô hình xác suất | `pip install pymc` | MCMC, variational inference, probabilistic modeling |
+| **Stan (PyStan)** | Thống kê Bayesian, MCMC | `pip install pystan` | HMC sampling, hiệu năng cao cho mô hình phức tạp |
+
+### Machine Learning & AI Tools
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **Scikit-learn** | ML cổ điển, classification, regression, clustering | `pip install scikit-learn` | API đơn giản, nhiều thuật toán ML, tiền xử lý dữ liệu |
+| **TensorFlow** | Deep Learning, Computer Vision, NLP, mô hình phức tạp | `pip install tensorflow` | Production-ready, hỗ trợ TPU, TF.js, TFLite |
+| **PyTorch** | Deep Learning nghiên cứu, CV, NLP, mô hình động | `pip install torch torchvision` | Dynamic computation graph, debugging dễ dàng, cộng đồng nghiên cứu |
+| **XGBoost** | Gradient boosting, dự đoán có giám sát | `pip install xgboost` | Hiệu suất cao, xử lý missing values, regularization |
+| **LightGBM** | Gradient boosting tốc độ cao, bộ dữ liệu lớn | `pip install lightgbm` | Nhanh hơn XGBoost với dữ liệu lớn, ít RAM, leaf-wise growth |
+| **CatBoost** | Gradient boosting với categorical features | `pip install catboost` | Xử lý biến phân loại tự động, ít hyperparameter tuning |
+| **Hugging Face** | NLP, mô hình pretrained | `pip install transformers` | SOTA models cho NLP, transfer learning dễ dàng |
+| **Spacy** | NLP, xử lý ngôn ngữ tự nhiên | `pip install spacy` | Nhanh, pipeline NLP hoàn chỉnh, mô hình ngôn ngữ đa dạng |
+
+### Visualization Tools
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **Matplotlib** | Biểu đồ khoa học, xuất bản, plotting cơ bản | `pip install matplotlib` | Kiểm soát chi tiết, biểu đồ chất lượng xuất bản |
+| **Seaborn** | Biểu đồ thống kê, heatmaps, visualize distributions | `pip install seaborn` | API cao cấp dựa trên matplotlib, themes đẹp |
+| **Plotly** | Biểu đồ tương tác, dashboards, web visualization | `pip install plotly` | Interactive plots, 3D visualization, animations |
+| **Bokeh** | Biểu đồ web tương tác, streaming data | `pip install bokeh` | Tương tác, data streaming, nhúng vào web |
+| **Altair** | Biểu đồ khai phá theo grammar of graphics | `pip install altair` | Declarative visualization, elegant API |
+| **HoloViews** | Biểu đồ phân tích phức tạp, data exploration | `pip install holoviews` | Kết hợp dữ liệu và visualization, đa backend |
+| **Datashader** | Biểu đồ big data, tỷ lệ chấm điểm lớn | `pip install datashader` | Rasterized plots cho dữ liệu lớn, không bị overplotting |
+| **PyVista** | Visualization 3D khoa học, mesh analysis | `pip install pyvista` | 3D visualization mạnh mẽ, mesh processing |
+
+### Web & API Tools
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **FastAPI** | Web APIs hiệu suất cao, microservices | `pip install fastapi uvicorn` | Nhanh, type checking tự động, OpenAPI/Swagger |
+| **Flask** | Web nhỏ gọn, REST APIs, prototypes | `pip install flask` | Nhẹ, linh hoạt, dễ học |
+| **Streamlit** | Dashboard và web app cho data science | `pip install streamlit` | Tạo web app nhanh chóng, interactive widgets |
+| **Dash** | Dashboards phân tích dữ liệu với Plotly | `pip install dash` | Interactive analytics apps, reactive design |
+| **Django** | Web applications phức tạp, full-stack | `pip install django` | Hệ thống ORM, admin interface, security |
+| **Panel** | Dashboard từ notebooks và scripts | `pip install panel` | Kết nối với nhiều thư viện visualization |
+| **Gradio** | UI cho machine learning models | `pip install gradio` | Demo ML models, interfaces trực quan |
+| **Voilà** | Chuyển notebooks thành web apps | `pip install voila` | Từ Jupyter notebook thành web app dễ dàng |
+
+### Command Line & Systems Tools
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **bc** | Máy tính dòng lệnh, biểu thức toán học | `sudo apt install bc` | Arbitrary precision, hàm toán học cơ bản |
+| **awk** | Xử lý text, tính toán cột, data manipulation | `sudo apt install gawk` | Pattern matching mạnh mẽ, xử lý text theo dòng |
+| **jq** | Xử lý JSON, querying, transformations | `sudo apt install jq` | Filter, map, reduce cho JSON, powerful syntax |
+| **datamash** | Thống kê dòng lệnh, tính toán trên CSV | `sudo apt install datamash` | Tính toán thống kê đơn giản từ command line |
+| **xsv** | Xử lý CSV hiệu suất cao | Từ crates.io hoặc cargo | Nhanh, memory efficient, filtering, joining CSV |
+| **parallel** | Chạy song song command, xử lý dữ liệu lớn | `sudo apt install parallel` | Tận dụng nhiều CPU cores, xử lý data parallelization |
+| **Miller (mlr)** | Xử lý CSV/TSV/JSON như awk/sed/cut | `sudo apt install miller` | Transformations trên dữ liệu có cấu trúc |
+| **GNU Octave** | MATLAB-like environment từ dòng lệnh | `sudo apt install octave` | Thực thi scripts MATLAB, tính toán số học |
+
+### Database & Storage Tools
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **SQLite** | Lightweight database, truy vấn tại chỗ | `sudo apt install sqlite3` | Zero configuration, file-based, embeddable |
+| **DuckDB** | OLAP database nhẹ, phân tích dữ liệu | `pip install duckdb` | Phân tích nhanh, in-process, query engine |
+| **SQLAlchemy** | ORM, database abstraction, models | `pip install sqlalchemy` | Database agnostic, ORM mạnh mẽ, query builder |
+| **PyArrow** | Memory-efficient data, columnar format | `pip install pyarrow` | Zero-copy reads, memory mapping, Parquet/Feather |
+| **H5py** | Scientific data trong HDF5 format | `pip install h5py` | Hierarchical data, compression, parallel I/O |
+| **zarr** | Chunked, compressed N-dimensional arrays | `pip install zarr` | Cloud storage, parallel access, lazy loading |
+| **fsspec** | File system interface cho nhiều backends | `pip install fsspec` | Thống nhất API cho S3/GCS/local, virtual filesystems |
+| **LMDB** | Memory-mapped database, key-value store | `pip install lmdb` | Cực nhanh, transaction support, concurrent access |
+
+### Performance & Scaling Tools
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **Numba** | JIT compilation, tăng tốc tính toán số | `pip install numba` | Python code tốc độ như C, GPU acceleration |
+| **Cython** | Compile Python thành C, extension modules | `pip install cython` | Static typing, tối ưu code Python cho tốc độ |
+| **Ray** | Distributed computing framework | `pip install ray` | Scaling Python applications, task parallelism |
+| **Joblib** | Parallel computing đơn giản, caching | `pip install joblib` | Transparent parallelization, disk-based caching |
+| **Cupy** | NumPy API trên GPU | `pip install cupy` | GPU acceleration cho NumPy operations |
+| **Dask** | Parallel computing, task scheduling | `pip install dask` | Scaling NumPy/Pandas, task graphs |
+| **Vaex** | Out-of-core dataframes, data processing | `pip install vaex` | Xử lý hàng tỷ dòng data, memory-mapping |
+| **RAPIDS** | Data science trên NVIDIA GPU | Xem docs.rapids.ai | GPU acceleration cho toàn bộ data science pipeline |
+
+### Specialized Domain Tools
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **SciPy.stats** | Thống kê nâng cao, hypothesis testing | `pip install scipy` | Distribution fitting, statistical tests |
+| **NetworkX** | Phân tích và visualize graphs/networks | `pip install networkx` | Graph algorithms, network analysis |
+| **Biopython** | Phân tích sinh học, sequences, structures | `pip install biopython` | Sequence analysis, phylogenetics |
+| **Geopandas** | Dữ liệu không gian địa lý, GIS | `pip install geopandas` | Spatial operations, mapping, GIS analysis |
+| **PyTables** | Scientific data quản lý bộ nhớ phân cấp | `pip install tables` | Efficient storage, complex indexing, compression |
+| **Astropy** | Thiên văn học và vật lý thiên văn | `pip install astropy` | Astronomical calculations, FITS handling |
+| **NLTK** | Natural Language Processing | `pip install nltk` | Text processing, linguistic data, corpus |
+| **librosa** | Audio analysis, nhận dạng tiếng nói | `pip install librosa` | Audio feature extraction, MIR, signal processing |
+
+### Time Series & Forecasting
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **statsmodels** | Mô hình thống kê, time series analysis | `pip install statsmodels` | ARIMA, state space models, regression |
+| **Prophet** | Dự báo time series | `pip install prophet` | Additive models, seasonality, trend changes |
+| **tsfresh** | Time series feature extraction | `pip install tsfresh` | Automated feature extraction, classification |
+| **sktime** | Unified interface cho time series ML | `pip install sktime` | Forecasting, classification, regression |
+| **Kats** | Analysis, detection, forecasting cho time series | `pip install kats` | Anomaly detection, forecasting, feature extraction |
+| **GluonTS** | Deep learning cho time series | `pip install gluonts` | Neural forecasting models, probabilistic |
+| **PyDLM** | Dynamic Linear Models | `pip install pydlm` | Bayesian time series modeling |
+| **pyts** | Time series classification | `pip install pyts` | Transformation-based classification |
+
+### Optimization & Operations Research
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **PuLP** | Linear programming, optimization | `pip install pulp` | Modeling language, multiple solvers |
+| **CVXPY** | Convex optimization | `pip install cvxpy` | Disciplined convex programming, problem description |
+| **OR-Tools** | Operations research | `pip install ortools` | Vehicle routing, scheduling, bin packing |
+| **Pyomo** | Optimization modeling | `pip install pyomo` | Algebraic modeling language, solver agnostic |
+| **Optuna** | Hyperparameter optimization | `pip install optuna` | Automated hyperparameter search, pruning |
+| **Hyperopt** | Parameter tuning, bayesian optimization | `pip install hyperopt` | Bayesian optimization, grid/random search |
+| **SciPy.optimize** | Optimization functions, minimization | `pip install scipy` | Root finding, curve fitting, minimize |
+| **DEAP** | Evolutionary algorithms | `pip install deap` | Genetic algorithms, evolutionary strategies |
+
+### Sandbox Development Tools
+
+| Tool | Phù hợp cho bài toán | Lệnh cài đặt | Ưu điểm |
+|------|----------------------|--------------|--------|
+| **Jupyter Notebook** | Interactive computing, prototyping | `pip install notebook` | Interactive execution, markdown, rich output |
+| **JupyterLab** | IDE-like notebook environment | `pip install jupyterlab` | Multi-document interface, extensions |
+| **IPython** | Enhanced interactive Python shell | `pip install ipython` | Interactive computing, shell integration |
+| **Colab** | Cloud notebooks với GPU/TPU | Web-based | Free compute resources, collaboration |
+| **Binder** | Shareable, reproducible environments | Web-based | Turn repositories into interactive environments |
+| **Docker** | Containerization, reproducible environments | `sudo apt install docker.io` | Isolation, reproducibility, deployment |
+| **Conda** | Package & environment management | Miniconda/Anaconda installer | Cross-platform, environment isolation |
+| **VS Code** | Code editing, debugging, notebooks | `sudo apt install code` | Extensions, integrated terminal, Git |
+
+### Hướng dẫn sử dụng công cụ theo loại bài toán
+
+1. **Bài toán thống kê đơn giản**:
+   - Công cụ: `bc`, `awk`, `datamash`, hoặc Python với `numpy.mean`, `numpy.std`
+   - Ví dụ: `cat data.txt | awk '{ sum += $1; sum2 += $1*$1 } END { print sum/NR, sqrt(sum2/NR - (sum/NR)^2) }'`
+
+2. **Phân tích dữ liệu có cấu trúc**:
+   - Công cụ: Pandas, Polars, DuckDB
+   - Khi nào dùng: Dữ liệu dạng bảng, cần group by, pivot, merge
+
+3. **Tính toán khoa học**:
+   - Công cụ: NumPy, SciPy, SymPy
+   - Khi nào dùng: Đại số tuyến tính, vi tích phân, tối ưu hóa
+
+4. **Biểu đồ và visualization**:
+   - Công cụ: Matplotlib (static), Plotly (interactive), Seaborn (statistical)
+   - Khi nào dùng: Cần hiểu dữ liệu, trình bày kết quả trực quan
+
+5. **Machine Learning**:
+   - Công cụ: scikit-learn (ML cổ điển), TensorFlow/PyTorch (Deep Learning)
+   - Khi nào dùng: Phân loại, hồi quy, clustering, CV, NLP
+
+6. **Big Data**:
+   - Công cụ: Dask, Vaex, PySpark
+   - Khi nào dùng: Dữ liệu vượt quá RAM, tính toán phân tán
+
+7. **Time Series**:
+   - Công cụ: statsmodels, Prophet, tsfresh
+   - Khi nào dùng: Dự báo, phân tích xu hướng, seasonal decomposition
+
+8. **Optimization**:
+   - Công cụ: PuLP, CVXPY, OR-Tools
+   - Khi nào dùng: Lập kế hoạch, scheduling, quy hoạch tuyến tính
+
+9. **Text & NLP**:
+   - Công cụ: NLTK, Spacy, Transformers
+   - Khi nào dùng: Text analysis, sentiment, entity recognition
+
+10. **Rapid Prototyping**:
+    - Công cụ: Jupyter Notebooks, Streamlit
+    - Khi nào dùng: Khám phá dữ liệu nhanh, tạo demo
+
+### Quy trình chọn công cụ phù hợp:
+
+1. **Xác định bài toán**: Loại bài toán, kích thước dữ liệu, yêu cầu về hiệu suất
+2. **Đánh giá công cụ**: Kiểm tra bảng công cụ phù hợp ở trên
+3. **Đa dạng hóa cho verification**: Chọn ít nhất 2 công cụ khác nhau để verify kết quả
+4. **Cân nhắc tradeoffs**:
+   - Tốc độ phát triển vs hiệu suất runtime
+   - Đơn giản vs tính năng
+   - Ngôn ngữ lập trình vs công cụ dòng lệnh
+5. **Luôn sao lưu và ghi nhận quá trình**: Tạo file `{uuid}.md` ghi lại quy trình, công cụ và lý do chọn
+
+### Công thức lựa chọn công cụ:
+
+- **Dữ liệu nhỏ, cần nhanh**: Command line tools (bc, awk, datamash)
+- **Dữ liệu có cấu trúc**: Pandas (thông thường), Polars (dữ liệu lớn)
+- **Tính toán phức tạp**: NumPy + SciPy (numeric), SymPy (symbolic)
+- **Visualization**: Matplotlib (static), Plotly (interactive)
+- **Big Data**: Dask (song song hóa), Vaex (out-of-core dataframes)
+- **ML cổ điển**: scikit-learn
+- **Deep Learning**: PyTorch (research), TensorFlow (production)
+- **Optimization**: PuLP (LP), CVXPY (convex), OR-Tools (combinatorial)
+
+## Data Format Conversion Guide
+
+### Table/CSV to JSON Conversion for Enhanced Calculation
+
+AI models understand structured JSON better than CSV/matrix formats, especially when reasoning or processing complex relationships. Converting tabular data to JSON format before calculation can significantly improve accuracy and reasoning capabilities.
+
+#### Why JSON is Better for AI Calculations
+
+| Feature | JSON | CSV (Matrix/Table) |
+|---------|------|-------------------|
+| **Structure clarity** | ✅ Clear nesting, keys, hierarchies | ❌ Ambiguous without headers or metadata |
+| **Data types preservation** | ✅ Numbers, strings, booleans preserved | ❌ Everything becomes a string |
+| **AI reasoning** | ✅ Easier to interpret fields by key | ❌ Harder to infer meaning from position |
+| **Scalability for nested data** | ✅ Good for complex, hierarchical data | ❌ Flat-only (not nested) |
+| **Preferred for calculation tools** | ✅ Compatible with most libraries | ⚠️ Often needs pre-processing |
+
+#### Common Issues with Table/CSV Data
+
+When working with raw tables (especially from Excel/CSV), AI calculation tools often face issues due to:
+- Misaligned columns
+- Missing or unclear headers
+- Multilevel rows/columns (merged cells)
+- Context split across rows
+- Inconsistent data types
+- Special characters breaking parsing
+
+#### CSV to JSON Conversion Tools
+
+1. **Python-based conversion:**
+   ```bash
+   # Create a UUID for this calculation
+   script_uuid=$(uuidgen)
+   script_file="_tmp/${script_uuid}.py"
+   
+   # Create Python script
+   cat > $script_file << 'EOL'
+   #!/usr/bin/env python3
+   """
+   CSV to JSON converter with type inference
+   """
+   import csv
+   import json
+   import sys
+   import re
+   
+   def infer_type(value):
+       """Infer data type from string value"""
+       # Try to convert to int
+       if re.match(r'^-?\d+$', value.strip()):
+           return int(value)
+       # Try to convert to float
+       elif re.match(r'^-?\d+\.\d+$', value.strip()):
+           return float(value)
+       # Try to convert to boolean
+       elif value.strip().lower() in ['true', 'yes']:
+           return True
+       elif value.strip().lower() in ['false', 'no']:
+           return False
+       # Default to string
+       return value
+   
+   def csv_to_json(csv_file, json_file):
+       """Convert CSV to JSON with type inference"""
+       data = []
+       with open(csv_file, 'r', encoding='utf-8') as file:
+           csv_reader = csv.DictReader(file)
+           for row in csv_reader:
+               # Convert types for each value
+               typed_row = {key: infer_type(value) for key, value in row.items()}
+               data.append(typed_row)
+       
+       with open(json_file, 'w', encoding='utf-8') as file:
+           json.dump(data, file, indent=2)
+       
+       print(f"Converted {len(data)} rows from {csv_file} to {json_file}")
+       return data
+
+   if __name__ == "__main__":
+       if len(sys.argv) < 3:
+           print("Usage: python csv_to_json.py <input.csv> <output.json>")
+           sys.exit(1)
+       
+       csv_file = sys.argv[1]
+       json_file = sys.argv[2]
+       data = csv_to_json(csv_file, json_file)
+       print(f"First row sample: {json.dumps(data[0], indent=2)}")
+   EOL
+   
+   # Make executable
+   chmod +x $script_file
+   
+   # Usage example
+   echo "Usage: python $script_file input.csv output.json"
+   ```
+
+2. **Using `jq` and `csv2json` for command-line conversion:**
+   ```bash
+   # Install csvkit if not already installed
+   pip install csvkit
+   
+   # Convert CSV to JSON
+   csvjson input.csv > output.json
+   
+   # Or using Python's pandas
+   python -c "import pandas as pd; pd.read_csv('input.csv').to_json('output.json', orient='records', indent=2)"
+   ```
+
+3. **Advanced conversion with data cleaning:**
+   ```bash
+   script_uuid=$(uuidgen)
+   script_file="_tmp/${script_uuid}.py"
+   
+   cat > $script_file << 'EOL'
+   #!/usr/bin/env python3
+   """
+   Advanced CSV to JSON converter with data cleaning
+   """
+   import pandas as pd
+   import json
+   import sys
+   import re
+   
+   def clean_csv_to_json(csv_file, json_file):
+       """Convert CSV to JSON with data cleaning"""
+       # Read CSV
+       df = pd.read_csv(csv_file)
+       
+       # Clean column names
+       df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns]
+       
+       # Handle missing values
+       df = df.fillna("")
+       
+       # Convert specific columns to appropriate types
+       for col in df.columns:
+           # Detect numeric columns
+           if df[col].apply(lambda x: isinstance(x, str) and re.match(r'^-?\d+(\.\d+)?$', x)).all():
+               df[col] = pd.to_numeric(df[col], errors='ignore')
+           
+           # Detect boolean columns
+           if df[col].apply(lambda x: isinstance(x, str) and x.lower() in ['true', 'false', 'yes', 'no', '1', '0', '', 'y', 'n']).all():
+               df[col] = df[col].map({'true': True, 'false': False, 'yes': True, 'no': False, '1': True, '0': False, 'y': True, 'n': False, '': None})
+       
+       # Convert to JSON
+       df.to_json(json_file, orient='records', indent=2)
+       
+       # Return first few rows as sample
+       data = json.loads(open(json_file).read())
+       return data[:3]  # Return first 3 rows as sample
+
+   if __name__ == "__main__":
+       if len(sys.argv) < 3:
+           print("Usage: python clean_csv_to_json.py <input.csv> <output.json>")
+           sys.exit(1)
+       
+       csv_file = sys.argv[1]
+       json_file = sys.argv[2]
+       sample = clean_csv_to_json(csv_file, json_file)
+       print(f"Converted CSV to JSON. Sample of first records:")
+       print(json.dumps(sample, indent=2))
+   EOL
+   
+   # Make executable
+   chmod +x $script_file
+   
+   # Usage example
+   echo "Usage: python $script_file input.csv output.json"
+   ```
+
+#### Best Practices for Table to JSON Conversion
+
+1. **Always check headers**: Ensure CSV file has clear, descriptive headers
+2. **Handle data types**: Convert strings to appropriate types (numbers, booleans, etc.)
+3. **Clean field names**: Remove spaces, special characters from column names
+4. **Sample verification**: Examine sample of output JSON to verify correct structure
+5. **Handle missing values**: Decide whether to use null, empty string, or default values
+6. **Nested structures**: For complex data, consider creating nested JSON objects
+7. **Large files**: Process large files in chunks or use streaming for memory efficiency
+8. **Data validation**: Apply validation rules before/after conversion
+
+#### Calculation Workflow with Table Data
+
+```bash
+# UUID generation for files
+input_uuid=$(uuidgen)
+conversion_uuid=$(uuidgen)
+calculation_uuid=$(uuidgen)
+
+# 1. Save input table/CSV
+input_file="_tmp/${input_uuid}.csv"
+echo "name,age,score
+Alice,30,95
+Bob,25,88
+Charlie,35,72" > $input_file
+
+# 2. Convert to JSON
+json_file="_tmp/${conversion_uuid}.json"
+python -c "import pandas as pd; pd.read_csv('$input_file').to_json('$json_file', orient='records')"
+
+# 3. Perform calculation on JSON data
+result_file="_tmp/${calculation_uuid}_result.json"
+python -c "
+import json
+import statistics
+
+# Load JSON data
+with open('$json_file', 'r') as f:
+    data = json.load(f)
+
+# Extract numeric field for calculation
+scores = [record['score'] for record in data]
+
+# Calculate statistics
+result = {
+    'mean': statistics.mean(scores),
+    'median': statistics.median(scores),
+    'std_dev': statistics.stdev(scores) if len(scores) > 1 else 0,
+    'min': min(scores),
+    'max': max(scores)
+}
+
+# Save results
+with open('$result_file', 'w') as f:
+    json.dump(result, f, indent=2)
+
+# Display results
+print('Results:')
+print(f'Mean: {result[\"mean\"]}')
+print(f'Median: {result[\"median\"]}')
+print(f'Std Dev: {result[\"std_dev\"]}')
+print(f'Range: {result[\"min\"]} - {result[\"max\"]}')
+"
+
+echo "Calculation complete. Results saved to $result_file"
+```
+
+#### Data Format Selection Guidelines
+
+| Data Characteristic | Recommended Format | Conversion Needed |
+|---------------------|-------------------|------------------|
+| Simple tabular data | JSON or CSV | Convert CSV → JSON for complex calculations |
+| Hierarchical/nested data | JSON | Always convert CSV → JSON |
+| Time series data | JSON array of objects | Convert from CSV with timestamp parsing |
+| Large datasets (>100MB) | Chunked JSON or streaming | Split CSV, process in batches |
+| Real-time data | JSON | Parse CSV on-the-fly to JSON objects |
+
+Remember: For AI-assisted calculations, structured JSON with proper data types will always yield more accurate and reliable results than raw CSV/table formats.
+
+## Conclusion
+
+By using this rule, AI will always provide accurate calculation results through external tools (Linux commands or Python) instead of relying on internal logic. The mandatory verification process ensures maximum accuracy and reliability by cross-checking results with multiple methods. For complex calculations, the multi-file modular approach with task planning ensures better organization, manageable file sizes, and clear documentation of the calculation process.

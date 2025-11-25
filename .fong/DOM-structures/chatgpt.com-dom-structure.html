@@ -1,0 +1,69 @@
+<!-- 
+ChatGPT DOM Structure - Technical Reference Only
+URL: https://chatgpt.com/
+Updated: 2025-09-28
+Purpose: Minimal DOM structure for automation
+-->
+
+<!-- Main Composer Area -->
+<div class="composer-container">
+  
+  <!-- Text Input Area (ProseMirror Editor) -->
+  <div class="prosemirror-parent">
+    <textarea class="fallbackTextarea" name="prompt-textarea" placeholder="Ask anything" style="display: none;"></textarea>
+    <div contenteditable="true" translate="no" class="ProseMirror" id="prompt-textarea">
+      <p data-placeholder="Ask anything" class="placeholder">
+        <br class="ProseMirror-trailingBreak">
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer Actions -->
+  <div data-testid="composer-footer-actions">
+    
+    <!-- File Upload -->
+    <div data-testid="composer-action-file-upload">
+      <button aria-label="Add photos">
+        <svg class="icon"></svg>
+        <span>Attach</span>
+      </button>
+    </div>
+
+    <!-- Search Button -->
+    <div data-testid="system-hint-search">
+      <button data-testid="composer-button-search" aria-label="Search">
+        <svg class="icon"></svg>
+        <span>Search</span>
+      </button>
+    </div>
+
+    <!-- Study Button -->
+    <button data-testid="composer-button-study" aria-label="Study">
+      <svg class="icon"></svg>
+      <span>Study</span>
+    </button>
+
+    <!-- Voice Mode -->
+    <div data-testid="composer-speech-button-container">
+      <button data-testid="composer-speech-button" aria-label="Start voice mode">
+        <svg class="icon"></svg>
+        <span>Voice</span>
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Model Switcher -->
+<button data-testid="model-switcher-dropdown-button">
+  <span>Model Selection</span>
+</button>
+
+<!-- Authentication -->
+<div class="auth-buttons">
+  <button data-testid="login-button">Login</button>
+  <button data-testid="signup-button">Sign Up</button>
+  <button data-testid="mobile-login-button">Mobile Login</button>
+  <button data-testid="profile-button">Profile</button>
+</div>

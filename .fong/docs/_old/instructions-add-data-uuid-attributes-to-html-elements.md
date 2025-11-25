@@ -1,0 +1,83 @@
+# Hướng dẫn AI: Thêm data-* attributes với UUID cho HTML elements
+
+## Mục đích
+Thêm attributes `data-field` và `data-uuid` vào các HTML elements để dễ dàng search và định vị sau này.
+
+## Pattern thực hiện
+
+### 1. Cấu trúc attributes
+```html
+<th data-field="[field-name]" data-uuid="[uuid-v4]">Content</th>
+```
+
+### 2. Qui tắc đặt tên
+- **data-field**: Tên field viết kebab-case, mô tả rõ ràng nội dung
+- **data-uuid**: UUID version 4 format `xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx`
+
+### 3. Ví dụ thực tế
+```html
+<!-- Before -->
+<th>Gói thành viên hiện tại:</th>
+<th>Ngày hết hạn gói:</th>
+<th>Lần truy cập gần nhất:</th>
+<th>Kỷ lục Streak (dài nhất):</th>
+
+<!-- After -->
+<th data-field="membership-package" data-uuid="a1b2c3d4-e5f6-7890-abcd-ef1234567890">Gói thành viên hiện tại:</th>
+<th data-field="expiry-date" data-uuid="b2c3d4e5-f6g7-8901-bcde-f23456789012">Ngày hết hạn gói:</th>
+<th data-field="last-activity" data-uuid="c3d4e5f6-g7h8-9012-cdef-345678901234">Lần truy cập gần nhất:</th>
+<th data-field="streak-record" data-uuid="d4e5f6g7-h8i9-0123-defa-456789012345">Kỷ lục Streak (dài nhất):</th>
+```
+
+## Mapping fields phổ biến
+
+| Vietnamese Content | data-field | UUID Pattern |
+|------------------|------------|--------------|
+| Gói thành viên hiện tại | membership-package | a1b2c3d4-e5f6-7890-abcd-ef1234567890 |
+| Ngày hết hạn gói | expiry-date | b2c3d4e5-f6g7-8901-bcde-f23456789012 |
+| Lần hoạt động cuối / Lần truy cập gần nhất | last-activity | c3d4e5f6-g7h8-9012-cdef-345678901234 |
+| Kỷ lục Streak | streak-record | d4e5f6g7-h8i9-0123-defa-456789012345 |
+| Tài khoản | account-type | e5f6g7h8-i9j0-1234-efab-567890123456 |
+| Thống kê học tập | learning-stats | f6g7h8i9-j0k1-2345-fcbc-678901234567 |
+
+## Lưu ý khi thực hiện
+
+### 1. Elements nào cần thêm
+- Các `<th>` trong table hiển thị thông tin user
+- Các `<div>` chứa sections quan trọng  
+- Các `<span>` hoặc `<td>` chứa data values
+
+### 2. UUID Generation
+- Mỗi element cần 1 UUID unique
+- Format: `xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx`
+- Tránh duplicate UUID trong cùng 1 file
+
+### 3. Best practices
+- data-field phải mô tả chính xác nội dung
+- UUID nên có pattern logic để dễ nhớ (nhóm a1b2c3d4, b2c3d4e5, ...)
+- Giữ format consistent trong toàn bộ project
+
+## Template áp dụng
+
+### Profile info tables
+```html
+<table class="fong-profile-meta-table">
+    <tr>
+        <th data-field="[field-name]" data-uuid="[uuid]">[Label]:</th>
+        <td><?php echo $value; ?></td>
+    </tr>
+</table>
+```
+
+### Section containers
+```html
+<div class="fong-profile-section" data-section="[section-name]" data-uuid="[uuid]">
+    <h3 data-field="section-title" data-uuid="[uuid]">[Title]</h3>
+    <!-- content -->
+</div>
+```
+
+## Tham khảo từ project
+- File: `wp-content/plugins/fong_de_lms/modules/users/frontend/templates/admin-view-user-profile-detail-partials/profile-general-info.php` (relative to DE project root)
+- Lines: 57-71
+- Pattern đã implement thành công cho 4 fields chính

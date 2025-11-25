@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.40.1">
+  <bpmn:process id="Process_AllEvents" isExecutable="false">
+
+    <!-- Start Events -->
+    <bpmn:startEvent id="StartEvent_None" name="None Start">
+      <bpmn:outgoing>Flow1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:startEvent id="StartEvent_Message" name="Message Start">
+      <bpmn:outgoing>Flow2</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
+    </bpmn:startEvent>
+
+    <bpmn:startEvent id="StartEvent_Timer" name="Timer Start&#10;(Daily 8AM)">
+      <bpmn:outgoing>Flow3</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1" />
+    </bpmn:startEvent>
+
+    <!-- Tasks connecting events -->
+    <bpmn:task id="Task1" name="Process Request">
+      <bpmn:incoming>Flow1</bpmn:incoming>
+      <bpmn:outgoing>Flow4</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task2" name="Handle Message">
+      <bpmn:incoming>Flow2</bpmn:incoming>
+      <bpmn:outgoing>Flow5</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task3" name="Generate Report">
+      <bpmn:incoming>Flow3</bpmn:incoming>
+      <bpmn:outgoing>Flow6</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Intermediate Events (Catching) -->
+    <bpmn:intermediateCatchEvent id="IntermediateEvent_Timer" name="Wait 2 Hours">
+      <bpmn:incoming>Flow4</bpmn:incoming>
+      <bpmn:outgoing>Flow7</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_2" />
+    </bpmn:intermediateCatchEvent>
+
+    <bpmn:intermediateCatchEvent id="IntermediateEvent_Message" name="Wait for&#10;Approval">
+      <bpmn:incoming>Flow5</bpmn:incoming>
+      <bpmn:outgoing>Flow8</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_2" />
+    </bpmn:intermediateCatchEvent>
+
+    <bpmn:intermediateCatchEvent id="IntermediateEvent_Signal" name="Wait for&#10;Signal">
+      <bpmn:incoming>Flow6</bpmn:incoming>
+      <bpmn:outgoing>Flow9</bpmn:outgoing>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
+    </bpmn:intermediateCatchEvent>
+
+    <!-- End Events -->
+    <bpmn:endEvent id="EndEvent_None" name="None End">
+      <bpmn:incoming>Flow7</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:endEvent id="EndEvent_Message" name="Message End&#10;(Notify)">
+      <bpmn:incoming>Flow8</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_3" />
+    </bpmn:endEvent>
+
+    <bpmn:endEvent id="EndEvent_Error" name="Error End">
+      <bpmn:incoming>Flow9</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1" />
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow1" sourceRef="StartEvent_None" targetRef="Task1" />
+    <bpmn:sequenceFlow id="Flow2" sourceRef="StartEvent_Message" targetRef="Task2" />
+    <bpmn:sequenceFlow id="Flow3" sourceRef="StartEvent_Timer" targetRef="Task3" />
+    <bpmn:sequenceFlow id="Flow4" sourceRef="Task1" targetRef="IntermediateEvent_Timer" />
+    <bpmn:sequenceFlow id="Flow5" sourceRef="Task2" targetRef="IntermediateEvent_Message" />
+    <bpmn:sequenceFlow id="Flow6" sourceRef="Task3" targetRef="IntermediateEvent_Signal" />
+    <bpmn:sequenceFlow id="Flow7" sourceRef="IntermediateEvent_Timer" targetRef="EndEvent_None" />
+    <bpmn:sequenceFlow id="Flow8" sourceRef="IntermediateEvent_Message" targetRef="EndEvent_Message" />
+    <bpmn:sequenceFlow id="Flow9" sourceRef="IntermediateEvent_Signal" targetRef="EndEvent_Error" />
+
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_AllEvents">
+
+      <!-- Start Events Layout (Top Row) -->
+      <bpmndi:BPMNShape id="StartEvent_None_di" bpmnElement="StartEvent_None">
+        <dc:Bounds x="152" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="140" y="125" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="StartEvent_Message_di" bpmnElement="StartEvent_Message">
+        <dc:Bounds x="152" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="132" y="255" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="StartEvent_Timer_di" bpmnElement="StartEvent_Timer">
+        <dc:Bounds x="152" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="136" y="385" width="68" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Tasks -->
+      <bpmndi:BPMNShape id="Task1_di" bpmnElement="Task1">
+        <dc:Bounds x="260" y="60" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task2_di" bpmnElement="Task2">
+        <dc:Bounds x="260" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task3_di" bpmnElement="Task3">
+        <dc:Bounds x="260" y="320" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <!-- Intermediate Events -->
+      <bpmndi:BPMNShape id="IntermediateEvent_Timer_di" bpmnElement="IntermediateEvent_Timer">
+        <dc:Bounds x="432" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="415" y="125" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="IntermediateEvent_Message_di" bpmnElement="IntermediateEvent_Message">
+        <dc:Bounds x="432" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="418" y="255" width="64" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="IntermediateEvent_Signal_di" bpmnElement="IntermediateEvent_Signal">
+        <dc:Bounds x="432" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="418" y="385" width="64" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- End Events -->
+      <bpmndi:BPMNShape id="EndEvent_None_di" bpmnElement="EndEvent_None">
+        <dc:Bounds x="542" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="532" y="125" width="56" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="EndEvent_Message_di" bpmnElement="EndEvent_Message">
+        <dc:Bounds x="542" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="522" y="255" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="EndEvent_Error_di" bpmnElement="EndEvent_Error">
+        <dc:Bounds x="542" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="533" y="385" width="54" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Edges -->
+      <bpmndi:BPMNEdge id="Flow1_di" bpmnElement="Flow1">
+        <di:waypoint x="188" y="100" />
+        <di:waypoint x="260" y="100" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow2_di" bpmnElement="Flow2">
+        <di:waypoint x="188" y="230" />
+        <di:waypoint x="260" y="230" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow3_di" bpmnElement="Flow3">
+        <di:waypoint x="188" y="360" />
+        <di:waypoint x="260" y="360" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow4_di" bpmnElement="Flow4">
+        <di:waypoint x="360" y="100" />
+        <di:waypoint x="432" y="100" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow5_di" bpmnElement="Flow5">
+        <di:waypoint x="360" y="230" />
+        <di:waypoint x="432" y="230" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow6_di" bpmnElement="Flow6">
+        <di:waypoint x="360" y="360" />
+        <di:waypoint x="432" y="360" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow7_di" bpmnElement="Flow7">
+        <di:waypoint x="468" y="100" />
+        <di:waypoint x="542" y="100" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow8_di" bpmnElement="Flow8">
+        <di:waypoint x="468" y="230" />
+        <di:waypoint x="542" y="230" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow9_di" bpmnElement="Flow9">
+        <di:waypoint x="468" y="360" />
+        <di:waypoint x="542" y="360" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
